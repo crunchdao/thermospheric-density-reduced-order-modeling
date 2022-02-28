@@ -14,33 +14,9 @@ if densitypod == 1:
     import matplotlib as mpl
     mpl.use('Agg')
 
-    # density_df_175_2000 = pd.read_csv('../SDC_HASDM/data/2000_HASDM_175-275KM.den', delim_whitespace=True, header=None)
-    # density_np_175_2000 = pd.DataFrame.to_numpy(density_df_175_2000)
-    # del density_df_175_2000
-    #
-    # density_df_300_2000 = pd.read_csv('../SDC_HASDM/data/2000_HASDM_300-375KM.den', delim_whitespace=True, header=None)
-    # density_np_300_2000 = pd.DataFrame.to_numpy(density_df_300_2000)
-    # del density_df_300_2000
-
-    density_df_400_2000 = pd.read_csv('../../Data/HASDM/2013_HASDM_400-475KM.den', delim_whitespace=True,
+    density_df_400_2000 = pd.read_csv('Data/2013_HASDM_400-475KM.den', delim_whitespace=True,
                                       header=None)
     density_np_400_2000 = pd.DataFrame.to_numpy(density_df_400_2000)
-    del density_df_400_2000
-
-    # density_df_500_2000 = pd.read_csv('../Data/HASDM/2013_HASDM_500-575KM.den', delim_whitespace=True,
-    #                                   header=None)
-    # density_np_500_2000 = pd.DataFrame.to_numpy(density_df_500_2000)
-    # del density_df_500_2000
-
-    # density_df_600_2000 = pd.read_csv('../SDC_HASDM/data/2000_HASDM_600-675KM.den', delim_whitespace=True,
-    #                                   header=None)
-    # density_np_600_2000 = pd.DataFrame.to_numpy(density_df_600_2000)
-    # del density_df_600_2000
-    #
-    # density_df_700_2000 = pd.read_csv('../SDC_HASDM/data/2000_HASDM_700-825KM.den', delim_whitespace=True,
-    #                                   header=None)
-    # density_np_700_2000 = pd.DataFrame.to_numpy(density_df_700_2000)
-    # del density_df_700_2000
 
     nt = 19
     nphi = 24
@@ -48,100 +24,33 @@ if densitypod == 1:
     t = np.linspace(-np.pi / 2, np.pi / 2, nt)
     phi = np.linspace(0, np.deg2rad(345), nphi)
 
-    # max_rho = np.max(density_np_175_2000[:, 10])  # The maximum is at the lowest altitude, the rest commented out.
-    # max2_rho = np.max(density_np_300_2000[:, 10])
     max_rho = np.max(density_np_400_2000[:, 10])
-    # max4_rho = np.max(density_np_500_2000[:, 10])
-    # max5_rho = np.max(density_np_600_2000[:, 10])
-    # max6_rho = np.max(density_np_700_2000[:, 10])
 
-    # max_rho = np.max(np.array([max1_rho, max2_rho, max3_rho, max4_rho, max5_rho, max6_rho]))
-
-    # density_np_175_2000[:, 10] = density_np_175_2000[:, 10] / max_rho
-    # density_np_300_2000[:, 10] = density_np_300_2000[:, 10] / max_rho
     density_np_400_2000[:, 10] = density_np_400_2000[:, 10] / max_rho
-    # density_np_500_2000[:, 10] = density_np_500_2000[:, 10] / max_rho
-    # density_np_600_2000[:, 10] = density_np_600_2000[:, 10] / max_rho
-    # density_np_700_2000[:, 10] = density_np_700_2000[:, 10] / max_rho
 
     rho_list = []
     for i in range(int(1331520 / (nt * nphi))):  # 1335168
-        # rho_175_i = density_np_175_2000[i * (5 * nt * nphi):(i + 1) * (5 * nt * nphi), 10]
-        # rho_polar_175_i = np.reshape(rho_175_i, (nt, nphi, 5))
-        #
-        # rho_300_i = density_np_300_2000[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), 10]
-        # rho_polar_300_i = np.reshape(rho_300_i, (nt, nphi, 4))
-
         rho_400_i = density_np_400_2000[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), 10]
         rho_polar_400_i = np.reshape(rho_400_i, (nt, nphi, 4))
 
-        # rho_500_i = density_np_500_2000[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), 10]
-        # rho_polar_500_i = np.reshape(rho_500_i, (nt, nphi, 4))
-
-        # rho_600_i = density_np_600_2000[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), 10]
-        # rho_polar_600_i = np.reshape(rho_600_i, (nt, nphi, 4))
-        #
-        # rho_700_i = density_np_700_2000[i * (6 * nt * nphi):(i + 1) * (6 * nt * nphi), 10]
-        # rho_polar_700_i = np.reshape(rho_700_i, (nt, nphi, 6))
-
-        # rho_polar = np.concatenate(
-        #     (rho_polar_400_i, rho_polar_500_i), axis=2)
         rho_polar = rho_polar_400_i
-        # rho_polar = np.concatenate(
-        #     (rho_polar_175_i, rho_polar_300_i, rho_polar_400_i, rho_polar_500_i, rho_polar_600_i, rho_polar_700_i),
-        #     axis=2)
 
         rho_list.append(rho_polar)
     rho = np.array(rho_list)
 
-    del rho_list
-
-    # del density_np_175_2000
-    # del density_np_300_2000
-    del density_np_400_2000
-    # del density_np_500_2000
-    # del density_np_600_2000
-    # del density_np_700_2000
-
-    # del rho_polar_175_i
-    # del rho_polar_300_i
-    del rho_polar_400_i
-    # del rho_polar_500_i
-    # del rho_polar_600_i
-    # del rho_polar_700_i
-
     rho_zeros = np.zeros((2920, 20, 24, 4))   # 2928        2920, 20, 24, 8
     rho_zeros[:, :nt, :nphi, :] = rho
-    del rho
-
-    # rho_zeros = np.expand_dims(rho_zeros, axis=-1)
 
     training_data = rho_zeros[:2000]
     validation_data = rho_zeros[2000:]
-    del rho_zeros
 
     val_data = validation_data
-    # val_data = np.squeeze(validation_data, axis=-1)
 
-    # plt.figure()
-    # plt.rcParams.update({'font.size': 14})  # increase the font size
-    # mpl.rcParams['legend.fontsize'] = 15
-    # plt.xlabel("Longitude [deg]")
-    # plt.ylabel("Latitude [deg]")
-    # # plt.contourf(np.rad2deg(phi), np.rad2deg(t), val_data[0, :19, :, 0] * max_rho, cmap="viridis", levels=900)
-    # plt.contourf(np.rad2deg(phi), np.rad2deg(t), val_data[0, :19, :, 0] * max_rho, cmap="viridis", levels=900)
-    # plt.colorbar()
-    # plt.grid(True)
-    # plt.tight_layout()
-    # plt.savefig('val_data.png')
-
-    # print(training_data.shape)
     training_data_resh = np.reshape(training_data, newshape=(2000, 20*24*4))
     nPoints_val = 920
     validation_data_resh = np.reshape(validation_data, newshape=(nPoints_val, 20*24*4))
     rhoavg = np.mean(validation_data_resh, axis=0)  # Compute mean
     rho_msub_val = validation_data_resh.T - np.tile(rhoavg, (nPoints_val, 1)).T  # Mean-subtracted data
-
 
     # print(training_data_resh.shape)
     rhoavg = np.mean(training_data_resh, axis=0)  # Compute mean
@@ -185,6 +94,7 @@ if densitypod == 1:
     X_pca = kpca.fit_transform(rho_msub.T)
     # print(X_pca.shape)
     # for i in range(len(num_modes)):
+
     auto_recon = False
     if auto_recon:
         print("asd")
@@ -349,6 +259,7 @@ if densitypod == 1:
     print('error_norm_nonl:', error_norm_nonl)  # Error in reconstruction using precomputed cosine kpca with
     # a nonlinear pre-image learning
     exit()
+
     # print(X_back[10:15, 500])
     # print(X_back_man[10:15, 500])
     # print(rho_msub_recon[10:15, 500])
