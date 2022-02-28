@@ -45,19 +45,30 @@ X_pca = pca.fit_transform(B)
 pcam = KernelPCA(n_components=num_modes, kernel="precomputed")  # , fit_inverse_transform=True, gamma=10
 gram = cosine_kernel(B, B)
 X_pcam = pcam.fit_transform(gram)
-
-print(X_pca[50, :])
-print(X_pcam[50, :])
+n_samples = X_pca.shape[0]
+K = pca._get_kernel(X_pcam)
+K.flat[:: n_samples + 1] += 1
+dual_coef_ = linalg.solve(K, B, sym_pos=True, overwrite_a=True)
+K = pca._get_kernel(X_pca, pca.X_transformed_fit_)
+kk_man = np.dot(K, dual_coef_)
+kk = pca.inverse_transform(X_pca)
+# kk=pca._get_kernel(B.T, X_pca.T)
+print(kk[50,:5])
+print(kk_man[50,:5])
 exit()
-k = linalg.lstsq(X_pca, B)
-invtrn = k[0]
-X_back_man = X_pca @ invtrn
+# k = linalg.lstsq(X_pca, B)
+# invtrn = k[0]
+# X_back_man = X_pca @ invtrn
 # print(pca.dual_coef_.shape)
-# print(pca._get_kernel(X_pca))
-# K = linear_kernel(X_pca, X_pca)
-# K.flat[:: nPoints + 1] += 1
-# dual_coef_ = linalg.solve(K, B, sym_pos=True, overwrite_a=True)
-# print(dual_coef_.shape)
+# K = pca._get_kernel(X_pca)
+K = linear_kernel(X_pca, X_pca)
+K.flat[:: nPoints + 1] += 1
+dual_coef_ = linalg.solve(K, B, sym_pos=True, overwrite_a=True)
+print(dual_coef_.shape)
+print(K.shape)
+K = linear_kernel(B.T, X_pca.T)
+print(K.shape)
+
 # K1 = pca._get_kernel(X_pca, B)
 # invtrn = np.dot(K1, dual_coef_)
 # print(invtrn.shape)
@@ -66,10 +77,10 @@ X_back_man = X_pca @ invtrn
 # print(a)
 # print(linear_kernel(X_pca,X_pca)[80,80])
 # print(K.flat[:: 100 + 1].shape)
-X_back = pca.inverse_transform(X_pca)
-print(X_back[80, :5])
-print(X_back_man[80, :5])
-print(B[80, :5])
+# X_back = pca.inverse_transform(X_pca)
+# print(X_back[80, :5])
+# print(X_back_man[80, :5])
+# print(B[80, :5])
 # print(X_pca[80, :])
 # print(pca.X_transformed_fit_[80, :])
 # kpcapre = KernelPCA(n_components=num_modes, kernel="precomputed", gamma=0.5)
