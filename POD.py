@@ -22,7 +22,7 @@ if densitypod == 1:
     # density_np_300_2000 = pd.DataFrame.to_numpy(density_df_300_2000)
     # del density_df_300_2000
 
-    density_df_400_2000 = pd.read_csv('../Data/HASDM/2013_HASDM_400-475KM.den', delim_whitespace=True,
+    density_df_400_2000 = pd.read_csv('../../Data/HASDM/2013_HASDM_400-475KM.den', delim_whitespace=True,
                                       header=None)
     density_np_400_2000 = pd.DataFrame.to_numpy(density_df_400_2000)
     del density_df_400_2000
@@ -175,9 +175,9 @@ if densitypod == 1:
         return np.dot(np.sin(X), np.sin(Y).T)
 
 
-    kpca = KernelPCA(n_components=num_modes, kernel="rbf", fit_inverse_transform=True, gamma=1.4e-9)  # , gamma=10
+    kpca = KernelPCA(n_components=num_modes, kernel="cosine", fit_inverse_transform=True)  # , gamma=1.4e-9
     pcam = KernelPCA(n_components=num_modes, kernel="precomputed")  # , fit_inverse_transform=True, gamma=10
-    gram = my_kernel(rho_msub.T, rho_msub.T)
+    gram = cosine_kernel(rho_msub.T, rho_msub.T)
     X_pca_man = pcam.fit_transform(gram)
     # pca = PCA(n_components=num_modes)
     # X_pca = pca.fit_transform(rho_msub.T)
@@ -306,8 +306,7 @@ if densitypod == 1:
         # plt.tight_layout()
         # plt.savefig('mode6.png')
 
-    rho_msub_recon_scikit = kpca.inverse_transform(X_pca)
-    X_back = rho_msub_recon_scikit
+    X_back = kpca.inverse_transform(X_pca)
 
     k = linalg.lstsq(X_pca, rho_msub.T)
     invtrn = k[0]
@@ -321,22 +320,34 @@ if densitypod == 1:
     X_back1 = X_pca @ invtrn
     X_back_man = X_pca_man @ invtrn_man
 
+    K = my_kernel(X_pca_man,X_pca_man)
+    K.flat[:: nPoints + 1] += 1
+    dual_coef_ = linalg.solve(K, rho_msub.T, sym_pos=True, overwrite_a=True)
+    K = my_kernel(X_pca_man, X_pca_man)
+    X_back_man_nonl = np.dot(K, dual_coef_).T
+
     # X_back_man = kernels1 @ X_pca.T
     X_back1 = X_back1.T
     X_back_man = X_back_man.T
     X_back = X_back.T
     error = rho_msub-X_back
     error_norm = linalg.norm(error)
-    print('error_norm:', error_norm)
+    print('error_norm:', error_norm)  # Error in reconstruction using built-in cosine kpca
     error1 = rho_msub-X_back1
     error1_norm = linalg.norm(error1)
-    print('error1_norm:', error1_norm)
+    print('error1_norm:', error1_norm)  # Error in reconstruction using built-in cosine kpca with
+    # a linear pre-image learning
     error_man = rho_msub-X_back_man
     error_norm_man = linalg.norm(error_man)
-    print('error_norm_man:', error_norm_man)
+    print('error_norm_man:', error_norm_man)  # Error in reconstruction using precomputed cosine kpca with
+    # a linear pre-image learning
     error_lin = rho_msub-rho_msub_recon
     error_norm_lin = linalg.norm(error_lin)
-    print('error_norm_lin:', error_norm_lin)
+    print('error_norm_lin:', error_norm_lin)   # Error in reconstruction using built-in linear pca with
+    error_nonl = rho_msub - X_back_man_nonl
+    error_norm_nonl = linalg.norm(error_nonl)
+    print('error_norm_nonl:', error_norm_nonl)  # Error in reconstruction using precomputed cosine kpca with
+    # a nonlinear pre-image learning
     exit()
     # print(X_back[10:15, 500])
     # print(X_back_man[10:15, 500])
