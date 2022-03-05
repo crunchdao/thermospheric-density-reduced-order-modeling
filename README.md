@@ -7,6 +7,7 @@ The two other Python codes are some toy examples to prove the methodologies.
 ## Related packages
 
 - [SSMLearn](https://github.com/haller-group/SSMLearn)
+- [Codpy](https://github.com/JohnLeM/codpy_alpha)
 
 ## Dependencies
 
