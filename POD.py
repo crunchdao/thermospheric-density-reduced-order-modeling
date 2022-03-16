@@ -4,67 +4,99 @@ import pandas as pd
 # import tensorflow as tf
 # from tensorflow.keras import layers, losses
 # from tensorflow.keras.models import Model
-import modred as mr
+# import modred as mr
 from sklearn.decomposition import PCA, KernelPCA
 from scipy import linalg
 from sklearn.preprocessing import normalize
-
+from scipy import fftpack
 densitypod = 1
 if densitypod == 1:
     import matplotlib as mpl
     mpl.use('Agg')
 
-    density_df_400_2000 = pd.read_csv('Data/2013_HASDM_400-475KM.den', delim_whitespace=True,
+    density_df_400_2013 = pd.read_csv('Data/2013_HASDM_400-475KM.den', delim_whitespace=True,
                                       header=None)
-    density_np_400_2000 = pd.DataFrame.to_numpy(density_df_400_2000)
+    density_np_400_2013 = pd.DataFrame.to_numpy(density_df_400_2013)
+    del density_df_400_2013
 
+    # density_df_400_2014 = pd.read_csv('Data/2014_HASDM_400-475KM.den', delim_whitespace=True,
+    #                                   header=None)
+    # density_np_400_2014 = pd.DataFrame.to_numpy(density_df_400_2014)
+    # del density_df_400_2014
+    # density_df_500_2013 = pd.read_csv('Data/2013_HASDM_500-575KM.den', delim_whitespace=True,
+    #                                   header=None)
+    # density_np_500_2013 = pd.DataFrame.to_numpy(density_df_500_2013)
+    # del density_df_500_2013
     nt = 19
     nphi = 24
 
     t = np.linspace(-np.pi / 2, np.pi / 2, nt)
     phi = np.linspace(0, np.deg2rad(345), nphi)
 
-    max_rho = np.max(density_np_400_2000[:, 10])
+    # max_rho1 = np.max(density_np_400_2013[:, 10])
+    # max_rho2 = np.max(density_np_400_2014[:, 10])
+    # max_rho = np.max(np.array([max_rho1, max_rho2]))
+    # density_np_400_2013[:, 10] = density_np_400_2013[:, 10] / max_rho
+    # density_np_400_2014[:, 10] = density_np_400_2014[:, 10] / max_rho
 
-    density_np_400_2000[:, 10] = density_np_400_2000[:, 10] / max_rho
+    max_rho = np.max(density_np_400_2013[:, 10])
+    density_np_400_2013[:, 10] = density_np_400_2013[:, 10] / max_rho
 
     rho_list = []
+    rho_list1 = []
+    rho_list2 = []
+
     for i in range(int(1331520 / (nt * nphi))):  # 1335168
-        rho_400_i = density_np_400_2000[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), 10]
-        rho_polar_400_i = np.reshape(rho_400_i, (nt, nphi, 4))
+        rho_400_i_2013 = density_np_400_2013[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), 10]
+        rho_polar_400_i_2013 = np.reshape(rho_400_i_2013, (nt, nphi, 4))
 
-        rho_polar = rho_polar_400_i
+        # rho_400_i_2014 = density_np_400_2013[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), 10]
+        # rho_polar_400_i_2014 = np.reshape(rho_400_i_2014, (nt, nphi, 4))
 
-        rho_list.append(rho_polar)
-    rho = np.array(rho_list)
+        # rho_500_i = density_np_500_2013[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), 10]
+        # rho_polar_500_i = np.reshape(rho_500_i, (nt, nphi, 4))
+        #
+        # rho_polar = np.concatenate(
+        #     (rho_polar_400_i_2013, rho_polar_400_i_2014), axis=2)
 
-    rho_zeros = np.zeros((2920, 20, 24, 4))   # 2928        2920, 20, 24, 8
+        rho_polar_2013 = rho_polar_400_i_2013
+        # rho_polar_2014 = rho_polar_400_i_2014
+
+        rho_list1.append(rho_polar_2013)
+        # rho_list2.append(rho_polar_2014)
+
+
+    # rho1 = np.array(rho_list1)
+    # rho2 = np.array(rho_list2)
+    # rho = np.concatenate((rho1, rho2), axis=0)  # Shape: (5840, 19, 24, 4)
+
+    rho = np.array(rho_list1)
+
+    rho_zeros = np.zeros((2920, 20, 24, 4))  # 5840, 20, 24, 4
     rho_zeros[:, :nt, :nphi, :] = rho
+    del rho_list1, rho  #, rho_list2, rho1, rho2
 
     training_data = rho_zeros[:2000]
     validation_data = rho_zeros[2000:]
 
-    val_data = validation_data
-
     training_data_resh = np.reshape(training_data, newshape=(2000, 20*24*4))
-    nPoints_val = 920
-    validation_data_resh = np.reshape(validation_data, newshape=(nPoints_val, 20*24*4))
-    rhoavg = np.mean(validation_data_resh, axis=0)  # Compute mean
-    rho_msub_val = validation_data_resh.T - np.tile(rhoavg, (nPoints_val, 1)).T  # Mean-subtracted data
+
+    # nPoints_val = 920  # 840
+    # validation_data_resh = np.reshape(validation_data, newshape=(nPoints_val, 20*24*4))
+    # rhoavg = np.mean(validation_data_resh, axis=0)  # Compute mean
+    # rho_msub_val = validation_data_resh.T - np.tile(rhoavg, (nPoints_val, 1)).T  # Mean-subtracted data
 
     # print(training_data_resh.shape)
     rhoavg = np.mean(training_data_resh, axis=0)  # Compute mean
     nPoints = 2000
     rho_msub = training_data_resh.T - np.tile(rhoavg, (nPoints, 1)).T  # Mean-subtracted data
     num_modes = 10
-    # print(rho_msub.shape)
-    POD_res = mr.compute_POD_arrays_direct_method(
-        rho_msub, list(mr.range(num_modes)))
-    modes = POD_res.modes
-    eigvals = POD_res.eigvals
-    # print(np.sqrt(eigvals[:num_modes]))
-    ROM = np.matmul(modes.T, rho_msub)
-    rho_msub_recon = np.matmul(modes, ROM)
+    # POD_res = mr.compute_POD_arrays_direct_method(
+    #     rho_msub, list(mr.range(num_modes)))
+    # modes = POD_res.modes
+    # eigvals = POD_res.eigvals
+    # ROM = np.matmul(modes.T, rho_msub)
+    # rho_msub_recon = np.matmul(modes, ROM)
     # energy_perc = np.sum(eigvals[:num_modes])/np.sum(eigvals)
     # print(energy_perc)
 
@@ -84,16 +116,23 @@ if densitypod == 1:
         return np.dot(np.sin(X), np.sin(Y).T)
 
 
-    kpca = KernelPCA(n_components=num_modes, kernel="cosine", fit_inverse_transform=True)  # , gamma=1.4e-9
-    pcam = KernelPCA(n_components=num_modes, kernel="precomputed")  # , fit_inverse_transform=True, gamma=10
-    gram = cosine_kernel(rho_msub.T, rho_msub.T)
-    X_pca_man = pcam.fit_transform(gram)
-    # pca = PCA(n_components=num_modes)
-    # X_pca = pca.fit_transform(rho_msub.T)
-    # pca_val = PCA(n_components=num_modes)
+    kpca = KernelPCA(n_components=num_modes, kernel="rbf", fit_inverse_transform=True, gamma=0.11)  # 1.4e-9
+    kpca2 = KernelPCA(n_components=num_modes, kernel="sigmoid", fit_inverse_transform=True, gamma=1.4e-2, coef0=1e-5)
+    kpca4 = KernelPCA(n_components=num_modes, kernel="laplacian", fit_inverse_transform=True, gamma=1e-2)
+    fftout = fftpack.fftn(rho_msub.T, axes=1)
+
+    # pcam = KernelPCA(n_components=num_modes, kernel="precomputed")  # , fit_inverse_transform=True, gamma=10
+    pca = PCA(n_components=num_modes)
+    pca_fft = PCA(n_components=num_modes)
+
+    X_pca_lin = pca.fit_transform(rho_msub.T)
+    X_pca_lin_fft = pca_fft.fit_transform(fftout.real)
+    # gram = cosine_kernel(rho_msub.T, rho_msub.T)
+    # X_pca_man = pcam.fit_transform(gram)
+
     X_pca = kpca.fit_transform(rho_msub.T)
-    # print(X_pca.shape)
-    # for i in range(len(num_modes)):
+    X_pca2 = kpca2.fit_transform(rho_msub.T)
+    X_pca4 = kpca4.fit_transform(rho_msub.T)
 
     auto_recon = False
     if auto_recon:
@@ -217,54 +256,59 @@ if densitypod == 1:
         # plt.savefig('mode6.png')
 
     X_back = kpca.inverse_transform(X_pca)
+    X_back2 = kpca2.inverse_transform(X_pca2)
+    X_back4 = kpca4.inverse_transform(X_pca4)
 
-    k = linalg.lstsq(X_pca, rho_msub.T)
-    invtrn = k[0]
-    k_man = linalg.lstsq(X_pca_man, rho_msub.T)
-    invtrn_man = k_man[0]
-    # print(rho_msub.shape)
-    # print(X_pca.shape)
-    # print(invtrn.shape)
-    # kernels1 = kpca._get_kernel(rho_msub, X_pca.T)
-    # print(kernels1.shape)
-    X_back1 = X_pca @ invtrn
-    X_back_man = X_pca_man @ invtrn_man
+    X_back_lin = pca.inverse_transform(X_pca_lin)
+    X_back_lin_fft = pca_fft.inverse_transform(X_pca_lin_fft)
+    X_back_lin_fft_inv = fftpack.ifftn(X_back_lin_fft, axes=1)
 
-    K = my_kernel(X_pca_man,X_pca_man)
-    K.flat[:: nPoints + 1] += 1
-    dual_coef_ = linalg.solve(K, rho_msub.T, sym_pos=True, overwrite_a=True)
-    K = my_kernel(X_pca_man, X_pca_man)
-    X_back_man_nonl = np.dot(K, dual_coef_).T
+    # K = my_kernel(X_pca,X_pca)
+    # K.flat[:: nPoints + 1] += 1
+    # dual_coef_ = linalg.solve(K, rho_msub.T, sym_pos=True, overwrite_a=True)
+    # K = my_kernel(X_pca, X_pca)
+    # X_back_man_nonl = np.dot(K, dual_coef_).T
 
-    # X_back_man = kernels1 @ X_pca.T
-    X_back1 = X_back1.T
-    X_back_man = X_back_man.T
+    X_back_lin = X_back_lin.T
+    # X_back1 = X_back1.T
+    # X_back_man = X_back_man.T
     X_back = X_back.T
+    X_back2 = X_back2.T
+    X_back4 = X_back4.T
+
     error = rho_msub-X_back
     error_norm = linalg.norm(error)
-    print('error_norm:', error_norm)  # Error in reconstruction using built-in cosine kpca
-    error1 = rho_msub-X_back1
-    error1_norm = linalg.norm(error1)
-    print('error1_norm:', error1_norm)  # Error in reconstruction using built-in cosine kpca with
-    # a linear pre-image learning
-    error_man = rho_msub-X_back_man
-    error_norm_man = linalg.norm(error_man)
-    print('error_norm_man:', error_norm_man)  # Error in reconstruction using precomputed cosine kpca with
-    # a linear pre-image learning
-    error_lin = rho_msub-rho_msub_recon
-    error_norm_lin = linalg.norm(error_lin)
-    print('error_norm_lin:', error_norm_lin)   # Error in reconstruction using built-in linear pca with
-    error_nonl = rho_msub - X_back_man_nonl
-    error_norm_nonl = linalg.norm(error_nonl)
-    print('error_norm_nonl:', error_norm_nonl)  # Error in reconstruction using precomputed cosine kpca with
-    # a nonlinear pre-image learning
-    exit()
+    print('error_norm:', error_norm)  # Error in reconstruction using built-in rbf kpca
 
-    # print(X_back[10:15, 500])
-    # print(X_back_man[10:15, 500])
-    # print(rho_msub_recon[10:15, 500])
-    # print(rho_msub[10:15, 500])
+    error2 = rho_msub-X_back2
+    error_norm2 = linalg.norm(error2)
+    print('error_norm2:', error_norm2)
+    error4 = rho_msub-X_back4
+    error_norm4 = linalg.norm(error4)
+    print('error_norm4:', error_norm4)
+
+    # error1 = rho_msub-X_back1
+    # error1_norm = linalg.norm(error1)
+    # print('error1_norm:', error1_norm)  # Error in reconstruction using built-in cosine kpca with
+    # a linear pre-image learning
+    # error_man = rho_msub-X_back_man
+    # error_norm_man = linalg.norm(error_man)
+    # print('error_norm_man:', error_norm_man)  # Error in reconstruction using precomputed cosine kpca with
+    # a linear pre-image learning
+    error_lin = rho_msub-X_back_lin
+    error_norm_lin = linalg.norm(error_lin)  # , ord=inf
+    print('error_norm_lin:', error_norm_lin)   # Error in reconstruction using built-in linear pca with
+    # error_lin_fft = fftout.real - X_back_lin_fft.T
+    error_lin_fft = rho_msub - X_back_lin_fft_inv.T
+    error_norm_lin_fft = linalg.norm(error_lin_fft)  # , ord=inf
+    print('error_norm_lin_fft:', error_norm_lin_fft)  # Error in reconstruction using built-in linear pca with
+    # error_nonl = rho_msub - X_back_man_nonl
+    # error_norm_nonl = linalg.norm(error_nonl)
+    # print('error_norm_nonl:', error_norm_nonl)  # Error in reconstruction using precomputed cosine kpca with
+    # a nonlinear pre-image learning
     # exit()
+
+
 
     # error = -validation_data_resh + decoded
     # error = np.reshape(error, newshape=(920, 20, 24, 4))
@@ -280,8 +324,9 @@ if densitypod == 1:
     # plt.tight_layout()
     # plt.savefig('ReconstructionError_nn.png')
     # exit()
-
-    error = rho_msub-rho_msub_recon
+    # fftin_resh = fftout.real.reshape(2000, 20, 24, 4)
+    # fftout_resh = error_lin_fft.reshape(2000, 20, 24, 4)
+    error = rho_msub - X_back_lin_fft_inv.T
     error = np.reshape(error.T, newshape=(2000, 20, 24, 4))
     plt.figure()
     plt.rcParams.update({'font.size': 14})  # increase the font size
@@ -293,7 +338,21 @@ if densitypod == 1:
     plt.colorbar()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('ReconstructionError.png')
+    plt.savefig('fft_error.png')
+
+    error = rho_msub-X_back_lin
+    error = np.reshape(error.T, newshape=(2000, 20, 24, 4))
+    plt.figure()
+    plt.rcParams.update({'font.size': 14})  # increase the font size
+    mpl.rcParams['legend.fontsize'] = 15
+    plt.xlabel("Longitude [deg]")
+    plt.ylabel("Latitude [deg]")
+    plt.contourf(np.rad2deg(phi), np.rad2deg(t), np.absolute(error[10, :19, :, 0])/training_data[10, :19, :, 0]*100,
+                 cmap="inferno", levels=900)
+    plt.colorbar()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig('ReconstructionError_pca.png')
 
     error = rho_msub-X_back
     error = np.reshape(error.T, newshape=(2000, 20, 24, 4))
@@ -307,21 +366,21 @@ if densitypod == 1:
     plt.colorbar()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('ReconstructionError_scikit.png')
+    plt.savefig('ReconstructionError_kpca.png')
 
-    error = rho_msub-X_back_man
-    error = np.reshape(error.T, newshape=(2000, 20, 24, 4))
-    plt.figure()
-    plt.rcParams.update({'font.size': 14})  # increase the font size
-    mpl.rcParams['legend.fontsize'] = 15
-    plt.xlabel("Longitude [deg]")
-    plt.ylabel("Latitude [deg]")
-    plt.contourf(np.rad2deg(phi), np.rad2deg(t), np.absolute(error[10, :19, :, 0])/training_data[10, :19, :, 0]*100,
-                 cmap="inferno", levels=900)
-    plt.colorbar()
-    plt.grid(True)
-    plt.tight_layout()
-    plt.savefig('ReconstructionError_scikit_man.png')
+    # error = rho_msub-X_back_man_nonl
+    # error = np.reshape(error.T, newshape=(2000, 20, 24, 4))
+    # plt.figure()
+    # plt.rcParams.update({'font.size': 14})  # increase the font size
+    # mpl.rcParams['legend.fontsize'] = 15
+    # plt.xlabel("Longitude [deg]")
+    # plt.ylabel("Latitude [deg]")
+    # plt.contourf(np.rad2deg(phi), np.rad2deg(t), np.absolute(error[10, :19, :, 0])/training_data[10, :19, :, 0]*100,
+    #              cmap="inferno", levels=900)
+    # plt.colorbar()
+    # plt.grid(True)
+    # plt.tight_layout()
+    # plt.savefig('ReconstructionError_kpca_man.png')
     exit()
     plt.figure()
     plt.rcParams.update({'font.size': 14})  # increase the font size
