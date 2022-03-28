@@ -1,6 +1,6 @@
 # HASDM_ROM
 
-"POD.py" is the main document dealing with POD of density. 
+"POD.py" deals with the POD of density. 
 
 The two other Python codes are some toy examples to prove the methodologies.
 
@@ -11,7 +11,7 @@ The two other Python codes are some toy examples to prove the methodologies.
 
 ## Dependencies
 
-In order to install dependencies, run the following:
+To install dependencies, run the following:
 
 ```bash
 pip install -r requirements/dev.txt
