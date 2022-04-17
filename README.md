@@ -8,6 +8,7 @@ The two other Python codes are some toy examples to prove the methodologies.
 
 - [SSMLearn](https://github.com/haller-group/SSMLearn)
 - [Codpy](https://github.com/JohnLeM/codpy_alpha)
+- [libROM](https://github.com/LLNL/libROM)
 
 ## Dependencies
 
