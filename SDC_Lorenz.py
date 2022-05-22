@@ -10,8 +10,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
 
-plot = 1  # 1 true, 0 false
-linear = 1  # 1 true, 0 false
+plot = 0  # 1 true, 0 false
+linear = 0  # 1 true, 0 false
 
 
 def get_lorenz_data(n_ics, noise_strength=0):
@@ -194,7 +194,7 @@ def main():
         autoencoder.compile(optimizer='adam', loss=losses.MeanSquaredError())
 
         history = autoencoder.fit(training_data, training_data,
-                        epochs= 20,  # 20
+                        epochs= 500,  # 20
                         shuffle=True,
                         validation_data=(validation_data, validation_data))
 
@@ -211,14 +211,14 @@ def main():
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
-        plt.savefig('figures/loss%s.png' % linear)
+        plt.savefig('output/loss%s_5epochs.png' % linear)
 
 
         encoded = autoencoder.encoder(validation_data).numpy()
         decoded = autoencoder.decoder(encoded).numpy()
 
         np.savetxt('output/encoded%s.txt' % linear, encoded, delimiter=',')
-
+        np.savetxt('output/training_data%s.txt' % linear, training_data, delimiter=',')
         np.savetxt('output/validation_data%s.txt' % linear, validation_data, delimiter=',')
         np.savetxt('output/decoded%s.txt' % linear, decoded, delimiter=',')
     else:
@@ -237,7 +237,7 @@ def main():
         ax1.set_zlabel(r'$z_3$')
 
         ax1.view_init(azim=120)
-        plt.savefig('figures/lorenz0.png', bbox_inches = "tight")
+        plt.savefig('output/lorenz0.png', bbox_inches = "tight")
 
         lorenz1_df = pd.read_csv('output/lorenz1.txt')
         lorenz1_np = pd.DataFrame.to_numpy(lorenz1_df)
@@ -249,7 +249,7 @@ def main():
         ax1.set_ylabel(r'$z_2$')
         ax1.set_zlabel(r'$z_3$')
         ax1.view_init(azim=120)
-        plt.savefig('figures/lorenz1.png', bbox_inches = "tight")
+        plt.savefig('output/lorenz1.png', bbox_inches = "tight")
 
         encoded0_df = pd.read_csv('output/encoded0.txt')
         encoded0_np = pd.DataFrame.to_numpy(encoded0_df)
@@ -261,20 +261,20 @@ def main():
         ax1.set_ylabel(r'$z_2$')
         ax1.set_zlabel(r'$z_3$')
         ax1.view_init(azim=120)
-        plt.savefig('figures/encoded0.png', bbox_inches = "tight")
+        plt.savefig('output/encoded0.png', bbox_inches = "tight")
 
-        encoded1_df = pd.read_csv('output/encoded1.txt')
-        encoded1_np = pd.DataFrame.to_numpy(encoded1_df)
+        # encoded1_df = pd.read_csv('output/encoded1.txt')
+        # encoded1_np = pd.DataFrame.to_numpy(encoded1_df)
 
-        fig1 = plt.figure(figsize=(3, 3))
-        ax1 = fig1.add_subplot(111, projection='3d')
-        ax1.plot(encoded1_np[2*l:3*l, 0], encoded1_np[2*l:3*l, 1], encoded1_np[2*l:3*l, 2], linewidth=2)
-        ax1.set_xlabel(r'$z_1$')
-        ax1.set_ylabel(r'$z_2$')
-        ax1.set_zlabel(r'$z_3$')
-        plt.show()
-        ax1.view_init(elev=100, azim=180)  # 80 200
-        plt.savefig('figures/encoded1.png', bbox_inches = "tight")
+        # fig1 = plt.figure(figsize=(3, 3))
+        # ax1 = fig1.add_subplot(111, projection='3d')
+        # ax1.plot(encoded1_np[2*l:3*l, 0], encoded1_np[2*l:3*l, 1], encoded1_np[2*l:3*l, 2], linewidth=2)
+        # ax1.set_xlabel(r'$z_1$')
+        # ax1.set_ylabel(r'$z_2$')
+        # ax1.set_zlabel(r'$z_3$')
+        # plt.show()
+        # ax1.view_init(elev=100, azim=180)  # 80 200
+        # plt.savefig('output/encoded1.png', bbox_inches = "tight")
 
         vd0_df = pd.read_csv('output/validation_data0.txt')
         vd0_np = pd.DataFrame.to_numpy(vd0_df)
@@ -288,7 +288,7 @@ def main():
         plt.grid(True)
 
         # ax1.view_init(elev=0, azim=90)
-        plt.savefig('figures/vd0.png', bbox_inches="tight")
+        plt.savefig('output/vd0.png', bbox_inches="tight")
 
         vd1_df = pd.read_csv('output/validation_data1.txt')
         vd1_np = pd.DataFrame.to_numpy(vd1_df)
@@ -302,7 +302,7 @@ def main():
         plt.grid(True)
 
         # ax1.view_init(azim=120)
-        plt.savefig('figures/vd1.png', bbox_inches="tight")
+        plt.savefig('output/vd1.png', bbox_inches="tight")
 
         decoded0_df = pd.read_csv('output/decoded0.txt')
         decoded0_np = pd.DataFrame.to_numpy(decoded0_df)
@@ -315,20 +315,20 @@ def main():
         # ax1.set_zlabel(r'$x_3$')
         plt.grid(True)
         # ax1.view_init(azim=120)
-        plt.savefig('figures/decoded0.png', bbox_inches="tight")
+        plt.savefig('output/decoded0.png', bbox_inches="tight")
 
-        decoded1_df = pd.read_csv('output/decoded1.txt')
-        decoded1_np = pd.DataFrame.to_numpy(decoded1_df)
+        # decoded1_df = pd.read_csv('output/decoded1.txt')
+        # decoded1_np = pd.DataFrame.to_numpy(decoded1_df)
 
-        fig1 = plt.figure(figsize=(3, 3))
-        ax1 = fig1.add_subplot(111)  #, projection='3d')
-        ax1.plot(decoded1_np[:l, 0], decoded1_np[:l, 1], linewidth=2)  # , decoded1_np[:l, 2]
-        ax1.set_xlabel(r'$x_1$')
-        ax1.set_ylabel(r'$x_2$')
-        # ax1.set_zlabel(r'$x_3$')
-        plt.grid(True)
-        # ax1.view_init(azim=120)
-        plt.savefig('figures/decoded1.png', bbox_inches="tight")
+        # fig1 = plt.figure(figsize=(3, 3))
+        # ax1 = fig1.add_subplot(111)  #, projection='3d')
+        # ax1.plot(decoded1_np[:l, 0], decoded1_np[:l, 1], linewidth=2)  # , decoded1_np[:l, 2]
+        # ax1.set_xlabel(r'$x_1$')
+        # ax1.set_ylabel(r'$x_2$')
+        # # ax1.set_zlabel(r'$x_3$')
+        # plt.grid(True)
+        # # ax1.view_init(azim=120)
+        # plt.savefig('output/decoded1.png', bbox_inches="tight")
 
         fig1 = plt.figure(figsize=(3, 3))
         ax1 = fig1.add_subplot(111) # , projection='3d')
@@ -339,18 +339,18 @@ def main():
         plt.grid(True)
 
         # ax1.view_init(azim=120)
-        plt.savefig('figures/delta0.png', bbox_inches="tight")
+        plt.savefig('output/delta0.png', bbox_inches="tight")
 
-        fig1 = plt.figure(figsize=(3, 3))
-        ax1 = fig1.add_subplot(111)  # , projection='3d')
-        ax1.plot(vd1_np[:l, 0] - decoded1_np[:l, 0], vd1_np[:l, 1] - decoded1_np[:l, 1], 'r', linewidth=2)  #  vd1_np[:l, 2] - decoded1_np[:l, 2],
-        ax1.set_xlabel(r'$x_1$')
-        ax1.set_ylabel(r'$x_2$')
-        # ax1.set_zlabel(r'$x_3$')
-        plt.grid(True)
+        # fig1 = plt.figure(figsize=(3, 3))
+        # ax1 = fig1.add_subplot(111)  # , projection='3d')
+        # ax1.plot(vd1_np[:l, 0] - decoded1_np[:l, 0], vd1_np[:l, 1] - decoded1_np[:l, 1], 'r', linewidth=2)  #  vd1_np[:l, 2] - decoded1_np[:l, 2],
+        # ax1.set_xlabel(r'$x_1$')
+        # ax1.set_ylabel(r'$x_2$')
+        # # ax1.set_zlabel(r'$x_3$')
+        # plt.grid(True)
 
-        # ax1.view_init(azim=120)
-        plt.savefig('figures/delta1.png', bbox_inches="tight")
+        # # ax1.view_init(azim=120)
+        # plt.savefig('output/delta1.png', bbox_inches="tight")
 
     return 0
 
