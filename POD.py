@@ -110,33 +110,32 @@ nPoints = 2000 # 2000
 rho_msub = training_data_resh.T - np.tile(rhoavg, (nPoints, 1)).T  # Mean-subtracted data
 num_modes = 10
 
-def mykpca(x):
-    try: 
-        kpca = KernelPCA(n_components=10, kernel="rbf", fit_inverse_transform=True, gamma=x[0], alpha=4.66323895e-12)
-        X_pca = kpca.fit_transform(rho_msub.T)
-        X_back = kpca.inverse_transform(X_pca)
-        X_back = X_back.T
-        error_adv = rho_msub-X_back
-        error_norm_adv = linalg.norm(error_adv)
-        return error_norm_adv
-    except:
-        return 1e+10
-gamma_init = np.linspace(0.1,0.6,num=5)
-alpha_init = np.linspace(9.52148437e-14, 9.52148437e-9, num=5)
-res_x = []
-res_value = []
-for i in range(1):
-    x0 = gamma_init[i] # alpha_init[i]
-    # bounds = [(0.2, 0.4), (1e-14, 1e-12)]
-    res = minimize(mykpca, x0, method='Nelder-Mead', tol=1e-13, options={'maxiter':10, 'disp': True})
-    # res = differential_evolution(mykpca, bounds, maxiter=10, tol=1e-14, disp=True)
-    res_x.append(res.x)
-    res_value.append(res.fun)
-print(res_x)
-# print(res_value)
+# def mykpca(x):
+#     try: 
+#         kpca = KernelPCA(n_components=10, kernel="rbf", fit_inverse_transform=True, gamma=x[0], alpha=4.66323895e-12)
+#         X_pca = kpca.fit_transform(rho_msub.T)
+#         X_back = kpca.inverse_transform(X_pca)
+#         X_back = X_back.T
+#         error_adv = rho_msub-X_back
+#         error_norm_adv = linalg.norm(error_adv)
+#         return error_norm_adv
+#     except:
+#         return 1e+10
+# gamma_init = np.linspace(0.1,0.6,num=5)
+# alpha_init = np.linspace(9.52148437e-14, 9.52148437e-9, num=5)
+# res_x = []
+# res_value = []
+# for i in range(1):
+#     x0 = gamma_init[i] # alpha_init[i]
+#     # bounds = [(0.2, 0.4), (1e-14, 1e-12)]
+#     res = minimize(mykpca, x0, method='Nelder-Mead', tol=1e-13, options={'maxiter':10, 'disp': True})
+#     # res = differential_evolution(mykpca, bounds, maxiter=10, tol=1e-14, disp=True)
+#     res_x.append(res.x)
+#     res_value.append(res.fun)
+# print(res_x)
 
 x = [0.2575, 4.66323895e-12] # 3.27369962e-01 4.66323895e-14
-kpca1 = KernelPCA(n_components=10, kernel="rbf", fit_inverse_transform=True, gamma=x[0], alpha=x[1])
+kpca1 = KernelPCA(n_components=num_modes, kernel="rbf", fit_inverse_transform=True, gamma=x[0], alpha=x[1])
 X_pca = kpca1.fit_transform(rho_msub.T)
 X_back = kpca1.inverse_transform(X_pca)
 X_back = X_back.T
@@ -144,3 +143,11 @@ error_adv = rho_msub-X_back
 error_norm_adv = linalg.norm(error_adv)
 print(error_norm_adv)
 
+pca = PCA(n_components=num_modes)
+pca.fit(rho_msub.T)
+X_pca_lin = pca.fit_transform(rho_msub_val.T)
+X_back_lin = pca.inverse_transform(X_pca_lin)
+X_back_lin = X_back_lin.T
+error_lin = rho_msub_val-X_back_lin
+error_norm_lin = linalg.norm(error_lin)
+print(error_norm_lin)
