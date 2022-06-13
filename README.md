@@ -1,8 +1,10 @@
-# HASDM_ROM
+# KPCA_Autoencoders
 
 "POD.py" deals with the POD of density. 
 
 The two other Python codes are some toy examples to prove the methodologies.
+
+The Matlab codes come from [this](https://it.mathworks.com/matlabcentral/fileexchange/39715-kernel-pca-and-pre-image-reconstruction) work and have been a reference point for us.
 
 ## Related packages
 
