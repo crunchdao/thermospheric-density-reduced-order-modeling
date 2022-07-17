@@ -3,6 +3,7 @@ from scipy.integrate import odeint
 from scipy.special import legendre
 
 import tensorflow as tf
+from tensorflow import keras
 from tensorflow.keras import layers, losses
 from tensorflow.keras.models import Model
 
@@ -13,8 +14,9 @@ from scipy import linalg
 from sklearn.preprocessing import normalize
 from scipy import fftpack
 from pathlib import Path
-from pyJoules.energy_meter import measure_energy
+# from pyJoules.energy_meter import measure_energy
 
+import keras_tuner
 
 mpl.use('Agg')
 
@@ -31,6 +33,7 @@ del density_df_400_2013
 #                                   header=None)
 # density_np_500_2013 = pd.DataFrame.to_numpy(density_df_500_2013)
 # del density_df_500_2013
+
 nt = 19
 nphi = 24
 
@@ -98,70 +101,135 @@ nPoints = 2000
 rho_msub = training_data_resh.T - np.tile(rhoavg, (nPoints, 1)).T  # Mean-subtracted data
 num_modes = 10
 
-@measure_energy
-def autoencoder_script():
-    class Autoencoder(Model):
-        def __init__(self, z_size):
-            super(Autoencoder, self).__init__()
-            self.z_size = z_size
-            self.encoder = tf.keras.Sequential([
-                    layers.Flatten(),
-                    layers.Dense(20 * 24 * 4, activation='relu'),
-                    layers.Dense(512, activation='relu'),
-                    layers.Dense(128, activation='relu'),
-                    # layers.Dense(64, activation='tanh'),
-                    layers.Dense(32, activation='relu'),
-                    # layers.Dense(16, activation='relu'),
-                    layers.Dense(z_size, activation='relu')           
-            ])
-            self.decoder = tf.keras.Sequential([
-                    layers.Input(shape=(z_size)),
-                    layers.Dense(32, activation='relu'),
-                    layers.Dense(128, activation='relu'),
-                    layers.Dense(512, activation='relu'),
-                    layers.Dense(20 * 24 * 4, activation='relu')
-            ])
 
-        def call(self, x):
-            encoded = self.encoder(x)
-            decoded = self.decoder(encoded)
-            return decoded
+def build_model(hp):
+    bottle = hp.Int("bottle", min_value=5, max_value=10)
+    act = hp.Choice("activation", ["relu", "tanh"])
+    nlayers = hp.Int("num_layers", 1, 3)
+    n_neurons = hp.Int("n_neurons", 4, 8)
 
+    if nlayers == 1:
+        model = keras.Sequential([
+        layers.Flatten(),
+        layers.Dense(20 * 24 * 4, activation=act),
 
-    # print(X_pca.shape)      
-    # print(X_pca_val.shape)
-    # print(training_data_resh.shape)
-    # print(validation_data_resh.shape)
-    # exit()
-    # csv_handler = CSVHandler('result.csv')
+        layers.Dense(2**n_neurons, activation=act),
+        layers.Dense(units=bottle, activation=act),
+        layers.Dense(2**n_neurons, activation=act),
 
-    # @measure_energy()
-    # def foo():
+        layers.Dense(20 * 24 * 4, activation=act)
+        ])
+    elif nlayers == 2:
+        model = keras.Sequential([
+        layers.Flatten(),
+        layers.Dense(20 * 24 * 4, activation=act),
 
-    num_modes = 10
-    run = True
-    if run:
-        autoencoder = Autoencoder(num_modes)
-        autoencoder.compile(optimizer='adam', loss=losses.MeanSquaredError())
+        layers.Dense(2**(n_neurons+1), activation=act),
+        layers.Dense(2**n_neurons, activation=act),
+        layers.Dense(units=bottle, activation=act),
+        layers.Dense(2**n_neurons, activation=act),
+        layers.Dense(2**(n_neurons+1), activation=act),
 
-        history = autoencoder.fit(training_data_resh, training_data_resh,
-                        batch_size=5,  # play with me
-                        epochs= 200,  # 200
-                        shuffle=True,
-                        validation_data=(validation_data_resh, validation_data_resh))
-
-        loss = list(history.history.values())
-        autoencoder.encoder.save('encoder')
-        autoencoder.decoder.save('decoder')
-        encoded = autoencoder.encoder(validation_data_resh).numpy()
-        decoded = autoencoder.decoder(encoded).numpy()
+        layers.Dense(20 * 24 * 4, activation=act)
+        ])
     else:
-        encoder = tf.keras.models.load_model('encoder')
-        decoder = tf.keras.models.load_model('decoder')
-        encoded = encoder(validation_data_resh).numpy()
-        decoded = decoder(encoded).numpy()
+        model = keras.Sequential([
+        layers.Flatten(),
+        layers.Dense(20 * 24 * 4, activation=act),
 
-autoencoder_script()
+        layers.Dense(2**(n_neurons+2), activation=act),
+        layers.Dense(2**(n_neurons+1), activation=act),
+        layers.Dense(2**n_neurons, activation=act),
+        layers.Dense(units=bottle, activation=act),
+        layers.Dense(2**n_neurons, activation=act),
+        layers.Dense(2**(n_neurons+1), activation=act),
+        layers.Dense(2**(n_neurons+2), activation=act),
+
+        layers.Dense(20 * 24 * 4, activation=act)
+        ])
+
+    model.compile(optimizer='adam', loss=losses.MeanSquaredError())
+    return model
+
+tuner = keras_tuner.RandomSearch(
+    build_model,
+    objective='val_loss',
+    max_trials=96)
+
+tuner.search(training_data_resh, training_data_resh, epochs=200, validation_data=(validation_data_resh, validation_data_resh))
+best_model = tuner.get_best_models()[0]
+
+
+
+
+
+
+
+
+# @measure_energy
+# def autoencoder_script():
+#     class Autoencoder(Model):
+#         def __init__(self, z_size):
+#             super(Autoencoder, self).__init__()
+#             self.z_size = z_size
+#             self.encoder = tf.keras.Sequential([
+#                     layers.Flatten(),
+#                     layers.Dense(20 * 24 * 4, activation='relu'),
+                    # layers.Dense(512, activation='relu'),
+                    # layers.Dense(128, activation='relu'),
+                    # # layers.Dense(64, activation='tanh'),
+                    # layers.Dense(32, activation='relu'),
+                    # # layers.Dense(16, activation='relu'),
+                    # layers.Dense(z_size, activation='relu')           
+#             ])
+#             self.decoder = tf.keras.Sequential([
+#                     layers.Input(shape=(z_size)),
+#                     layers.Dense(32, activation='relu'),
+#                     layers.Dense(128, activation='relu'),
+#                     layers.Dense(512, activation='relu'),
+#                     layers.Dense(20 * 24 * 4, activation='relu')
+#             ])
+
+#         def call(self, x):
+#             encoded = self.encoder(x)
+#             decoded = self.decoder(encoded)
+#             return decoded
+
+
+#     # print(X_pca.shape)      
+#     # print(X_pca_val.shape)
+#     # print(training_data_resh.shape)
+#     # print(validation_data_resh.shape)
+#     # exit()
+#     # csv_handler = CSVHandler('result.csv')
+
+#     # @measure_energy()
+#     # def foo():
+
+#     num_modes = 10
+#     run = True
+#     if run:
+#         autoencoder = Autoencoder(num_modes)
+#         autoencoder.compile(optimizer='adam', loss=losses.MeanSquaredError())
+
+#         history = autoencoder.fit(training_data_resh, training_data_resh,
+#                         batch_size=5,  # play with me
+#                         epochs= 200,  # 200
+#                         shuffle=True,
+#                         validation_data=(validation_data_resh, validation_data_resh))
+
+#         loss = list(history.history.values())
+#         autoencoder.encoder.save('encoder')
+#         autoencoder.decoder.save('decoder')
+#         encoded = autoencoder.encoder(validation_data_resh).numpy()
+#         decoded = autoencoder.decoder(encoded).numpy()
+#     else:
+#         encoder = tf.keras.models.load_model('encoder')
+#         decoder = tf.keras.models.load_model('decoder')
+#         encoded = encoder(validation_data_resh).numpy()
+#         decoded = decoder(encoded).numpy()
+
+# autoencoder_script()
 
 
 # np.savetxt('output/atm/encoded.txt', encoded, delimiter=',')
