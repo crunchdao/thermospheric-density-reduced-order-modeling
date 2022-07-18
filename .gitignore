@@ -2,3 +2,4 @@ Data/
 venv/
 .idea/
 output/
+Hyperopt_training/

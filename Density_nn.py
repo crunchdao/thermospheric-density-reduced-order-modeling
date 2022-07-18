@@ -161,39 +161,68 @@ best_model = tuner.get_best_models()[0]
 
 
 
+# Vahid, these is the model for you:
 
+# Value             |Best Value So Far |Hyperparameter
+# 5                 |9                 |bottle
+# relu              |tanh              |activation
+# 2                 |2                 |num_layers
+# 8                 |6                 |n_neurons
 
+class Autoencoder(Model):
+    def __init__(self):
+        super(Autoencoder, self).__init__()
+        self.encoder = tf.keras.Sequential([
+                layers.Flatten(),
+                layers.Dense(20 * 24 * 4, activation='tanh'),
+
+                layers.Dense(128, activation='tanh'),
+                layers.Dense(64, activation='tanh'),
+                layers.Dense(9, activation='tanh')           
+        ])
+        self.decoder = tf.keras.Sequential([
+                layers.Input(shape=(9)),
+                layers.Dense(64, activation='tanh'),
+                layers.Dense(128, activation='tanh'),
+
+                layers.Dense(20 * 24 * 4, activation='tanh')
+        ])
+
+    def call(self, x):
+        encoded = self.encoder(x)
+        decoded = self.decoder(encoded)
+        return decoded
 
 
 
 # @measure_energy
 # def autoencoder_script():
-#     class Autoencoder(Model):
-#         def __init__(self, z_size):
-#             super(Autoencoder, self).__init__()
-#             self.z_size = z_size
-#             self.encoder = tf.keras.Sequential([
-#                     layers.Flatten(),
-#                     layers.Dense(20 * 24 * 4, activation='relu'),
-                    # layers.Dense(512, activation='relu'),
-                    # layers.Dense(128, activation='relu'),
-                    # # layers.Dense(64, activation='tanh'),
-                    # layers.Dense(32, activation='relu'),
-                    # # layers.Dense(16, activation='relu'),
-                    # layers.Dense(z_size, activation='relu')           
-#             ])
-#             self.decoder = tf.keras.Sequential([
-#                     layers.Input(shape=(z_size)),
-#                     layers.Dense(32, activation='relu'),
-#                     layers.Dense(128, activation='relu'),
-#                     layers.Dense(512, activation='relu'),
-#                     layers.Dense(20 * 24 * 4, activation='relu')
-#             ])
+    # class Autoencoder(Model):
+    #     def __init__(self, z_size):
+    #         super(Autoencoder, self).__init__()
+    #         self.z_size = z_size
+    #         self.encoder = tf.keras.Sequential([
+    #                 layers.Flatten(),
+    #                 layers.Dense(20 * 24 * 4, activation='relu'),
+    #                 layers.Dense(512, activation='relu'),
+    #                 layers.Dense(128, activation='relu'),
+    #                 # layers.Dense(64, activation='tanh'),
+    #                 layers.Dense(32, activation='relu'),
+    #                 # layers.Dense(16, activation='relu'),
+    #                 layers.Dense(z_size, activation='relu')           
+    #         ])
+    #         self.decoder = tf.keras.Sequential([
+    #                 layers.Input(shape=(z_size)),
+    #                 layers.Dense(32, activation='relu'),
+    #                 layers.Dense(128, activation='relu'),
+    #                 layers.Dense(512, activation='relu'),
+    #                 layers.Dense(20 * 24 * 4, activation='relu')
+    #         ])
 
-#         def call(self, x):
-#             encoded = self.encoder(x)
-#             decoded = self.decoder(encoded)
-#             return decoded
+    #     def call(self, x):
+    #         encoded = self.encoder(x)
+    #         decoded = self.decoder(encoded)
+    #         return decoded
 
 
 #     # print(X_pca.shape)      
