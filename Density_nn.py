@@ -3,6 +3,7 @@ from scipy.integrate import odeint
 from scipy.special import legendre
 
 import tensorflow as tf
+from tensorflow import keras
 from tensorflow.keras import layers, losses
 from tensorflow.keras.models import Model
 
@@ -13,12 +14,9 @@ from scipy import linalg
 from sklearn.preprocessing import normalize
 from scipy import fftpack
 from pathlib import Path
-import time
-# import pyRAPL
 # from pyJoules.energy_meter import measure_energy
-# from pyJoules.handler.csv_handler import CSVHandler
-# from pyJoules.device.rapl_device import RaplPackageDomain
 
+import keras_tuner
 
 mpl.use('Agg')
 
@@ -35,6 +33,7 @@ del density_df_400_2013
 #                                   header=None)
 # density_np_500_2013 = pd.DataFrame.to_numpy(density_df_500_2013)
 # del density_df_500_2013
+
 nt = 19
 nphi = 24
 
@@ -101,27 +100,92 @@ rhoavg = np.mean(training_data_resh, axis=0)  # Compute mean
 nPoints = 2000
 rho_msub = training_data_resh.T - np.tile(rhoavg, (nPoints, 1)).T  # Mean-subtracted data
 num_modes = 10
-start_time = time.time()
+
+
+def build_model(hp):
+    bottle = hp.Int("bottle", min_value=5, max_value=10)
+    act = hp.Choice("activation", ["relu", "tanh"])
+    nlayers = hp.Int("num_layers", 1, 3)
+    n_neurons = hp.Int("n_neurons", 4, 8)
+
+    if nlayers == 1:
+        model = keras.Sequential([
+        layers.Flatten(),
+        layers.Dense(20 * 24 * 4, activation=act),
+
+        layers.Dense(2**n_neurons, activation=act),
+        layers.Dense(units=bottle, activation=act),
+        layers.Dense(2**n_neurons, activation=act),
+
+        layers.Dense(20 * 24 * 4, activation=act)
+        ])
+    elif nlayers == 2:
+        model = keras.Sequential([
+        layers.Flatten(),
+        layers.Dense(20 * 24 * 4, activation=act),
+
+        layers.Dense(2**(n_neurons+1), activation=act),
+        layers.Dense(2**n_neurons, activation=act),
+        layers.Dense(units=bottle, activation=act),
+        layers.Dense(2**n_neurons, activation=act),
+        layers.Dense(2**(n_neurons+1), activation=act),
+
+        layers.Dense(20 * 24 * 4, activation=act)
+        ])
+    else:
+        model = keras.Sequential([
+        layers.Flatten(),
+        layers.Dense(20 * 24 * 4, activation=act),
+
+        layers.Dense(2**(n_neurons+2), activation=act),
+        layers.Dense(2**(n_neurons+1), activation=act),
+        layers.Dense(2**n_neurons, activation=act),
+        layers.Dense(units=bottle, activation=act),
+        layers.Dense(2**n_neurons, activation=act),
+        layers.Dense(2**(n_neurons+1), activation=act),
+        layers.Dense(2**(n_neurons+2), activation=act),
+
+        layers.Dense(20 * 24 * 4, activation=act)
+        ])
+
+    model.compile(optimizer='adam', loss=losses.MeanSquaredError())
+    return model
+
+tuner = keras_tuner.RandomSearch(
+    build_model,
+    objective='val_loss',
+    max_trials=96)
+
+tuner.search(training_data_resh, training_data_resh, epochs=200, validation_data=(validation_data_resh, validation_data_resh))
+best_model = tuner.get_best_models()[0]
+
+
+
+# Vahid, these is the model for you:
+
+# Value             |Best Value So Far |Hyperparameter
+# 5                 |9                 |bottle
+# relu              |tanh              |activation
+# 2                 |2                 |num_layers
+# 8                 |6                 |n_neurons
+
 class Autoencoder(Model):
-    def __init__(self, z_size):
+    def __init__(self):
         super(Autoencoder, self).__init__()
-        self.z_size = z_size
         self.encoder = tf.keras.Sequential([
                 layers.Flatten(),
-                layers.Dense(20 * 24 * 4, activation='relu'),
-                layers.Dense(512, activation='relu'),
-                layers.Dense(128, activation='relu'),
-                # layers.Dense(64, activation='tanh'),
-                layers.Dense(32, activation='relu'),
-                # layers.Dense(16, activation='relu'),
-                layers.Dense(z_size, activation='relu')           
+                layers.Dense(20 * 24 * 4, activation='tanh'),
+
+                layers.Dense(128, activation='tanh'),
+                layers.Dense(64, activation='tanh'),
+                layers.Dense(9, activation='tanh')           
         ])
         self.decoder = tf.keras.Sequential([
-                layers.Input(shape=(z_size)),
-                layers.Dense(32, activation='relu'),
-                layers.Dense(128, activation='relu'),
-                layers.Dense(512, activation='relu'),
-                layers.Dense(20 * 24 * 4, activation='relu')
+                layers.Input(shape=(9)),
+                layers.Dense(64, activation='tanh'),
+                layers.Dense(128, activation='tanh'),
+
+                layers.Dense(20 * 24 * 4, activation='tanh')
         ])
 
     def call(self, x):
@@ -130,74 +194,106 @@ class Autoencoder(Model):
         return decoded
 
 
-# print(X_pca.shape)      
-# print(X_pca_val.shape)
-# print(training_data_resh.shape)
-# print(validation_data_resh.shape)
-# exit()
-# csv_handler = CSVHandler('result.csv')
 
-# @measure_energy()
-# def foo():
+# @measure_energy
+# def autoencoder_script():
+    # class Autoencoder(Model):
+    #     def __init__(self, z_size):
+    #         super(Autoencoder, self).__init__()
+    #         self.z_size = z_size
+    #         self.encoder = tf.keras.Sequential([
+    #                 layers.Flatten(),
+    #                 layers.Dense(20 * 24 * 4, activation='relu'),
+    #                 layers.Dense(512, activation='relu'),
+    #                 layers.Dense(128, activation='relu'),
+    #                 # layers.Dense(64, activation='tanh'),
+    #                 layers.Dense(32, activation='relu'),
+    #                 # layers.Dense(16, activation='relu'),
+    #                 layers.Dense(z_size, activation='relu')           
+    #         ])
+    #         self.decoder = tf.keras.Sequential([
+    #                 layers.Input(shape=(z_size)),
+    #                 layers.Dense(32, activation='relu'),
+    #                 layers.Dense(128, activation='relu'),
+    #                 layers.Dense(512, activation='relu'),
+    #                 layers.Dense(20 * 24 * 4, activation='relu')
+    #         ])
 
-num_modes = 10
-run = True
-if run:
-    autoencoder = Autoencoder(num_modes)
-    autoencoder.compile(optimizer='adam', loss=losses.MeanSquaredError())
-
-    history = autoencoder.fit(training_data_resh, training_data_resh,
-                    batch_size=5,  # play with me
-                    epochs= 200,  # 200
-                    shuffle=True,
-                    validation_data=(validation_data_resh, validation_data_resh))
-
-    loss = list(history.history.values())
-    autoencoder.encoder.save('encoder')
-    autoencoder.decoder.save('decoder')
-    encoded = autoencoder.encoder(validation_data_resh).numpy()
-    decoded = autoencoder.decoder(encoded).numpy()
-else:
-    encoder = tf.keras.models.load_model('encoder')
-    decoder = tf.keras.models.load_model('decoder')
-    encoded = encoder(validation_data_resh).numpy()
-    decoded = decoder(encoded).numpy()
-print("--- %s seconds ---" % (time.time() - start_time))
+    #     def call(self, x):
+    #         encoded = self.encoder(x)
+    #         decoded = self.decoder(encoded)
+    #         return decoded
 
 
-np.savetxt('output/atm/encoded.txt', encoded, delimiter=',')
-np.savetxt('output/atm/training_data.txt', training_data_resh, delimiter=',')
-np.savetxt('output/atm/validation_data.txt', validation_data_resh, delimiter=',')
-np.savetxt('output/atm/decoded.txt', decoded, delimiter=',')
-if run:
-    plt.figure()
-    plt.rcParams.update({'font.size': 14})  # increase the font size
-    mpl.rcParams['legend.fontsize'] = 15
-    plt.xlabel("Number of Epoch")
-    plt.ylabel("Loss")
-    plt.plot(loss[0], label="Train", linewidth=2)
-    plt.plot(loss[1], label="Validation", linewidth=2)
-    plt.yscale("log")
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
-    plt.savefig('output/loss_atm.png')
-error = decoded - validation_data_resh 
-error = np.reshape(error, newshape=(nPoints_val, 20, 24, 4))
-plt.figure() 
-plt.rcParams.update({'font.size': 14})  # increase the font size
-mpl.rcParams['legend.fontsize'] = 15
-plt.xlabel("Longitude [deg]")
-plt.ylabel("Latitude [deg]")
-plt.contourf(np.rad2deg(phi), np.rad2deg(t), np.absolute(error[10, :19, :, 0])/validation_data[10, :19, :, 0]*100,
-                cmap="inferno", levels=900)
-plt.colorbar()
-plt.grid(True)
-plt.tight_layout()
-plt.savefig('output/ReconstructionError_nn.png')
-error_norm_nn = linalg.norm(decoded - validation_data_resh)  # , ord=inf
-print('error_norm_nn:', error_norm_nn)
+#     # print(X_pca.shape)      
+#     # print(X_pca_val.shape)
+#     # print(training_data_resh.shape)
+#     # print(validation_data_resh.shape)
+#     # exit()
+#     # csv_handler = CSVHandler('result.csv')
 
-# foo()
-# csv_handler.save_data()
+#     # @measure_energy()
+#     # def foo():
+
+#     num_modes = 10
+#     run = True
+#     if run:
+#         autoencoder = Autoencoder(num_modes)
+#         autoencoder.compile(optimizer='adam', loss=losses.MeanSquaredError())
+
+#         history = autoencoder.fit(training_data_resh, training_data_resh,
+#                         batch_size=5,  # play with me
+#                         epochs= 200,  # 200
+#                         shuffle=True,
+#                         validation_data=(validation_data_resh, validation_data_resh))
+
+#         loss = list(history.history.values())
+#         autoencoder.encoder.save('encoder')
+#         autoencoder.decoder.save('decoder')
+#         encoded = autoencoder.encoder(validation_data_resh).numpy()
+#         decoded = autoencoder.decoder(encoded).numpy()
+#     else:
+#         encoder = tf.keras.models.load_model('encoder')
+#         decoder = tf.keras.models.load_model('decoder')
+#         encoded = encoder(validation_data_resh).numpy()
+#         decoded = decoder(encoded).numpy()
+
+# autoencoder_script()
+
+
+# np.savetxt('output/atm/encoded.txt', encoded, delimiter=',')
+# np.savetxt('output/atm/training_data.txt', training_data_resh, delimiter=',')
+# np.savetxt('output/atm/validation_data.txt', validation_data_resh, delimiter=',')
+# np.savetxt('output/atm/decoded.txt', decoded, delimiter=',')
+# if run:
+#     plt.figure()
+#     plt.rcParams.update({'font.size': 14})  # increase the font size
+#     mpl.rcParams['legend.fontsize'] = 15
+#     plt.xlabel("Number of Epoch")
+#     plt.ylabel("Loss")
+#     plt.plot(loss[0], label="Train", linewidth=2)
+#     plt.plot(loss[1], label="Validation", linewidth=2)
+#     plt.yscale("log")
+#     plt.legend()
+#     plt.grid(True)
+#     plt.tight_layout()
+#     plt.savefig('output/loss_atm.png')
+# error = decoded - validation_data_resh 
+# error = np.reshape(error, newshape=(nPoints_val, 20, 24, 4))
+# plt.figure() 
+# plt.rcParams.update({'font.size': 14})  # increase the font size
+# mpl.rcParams['legend.fontsize'] = 15
+# plt.xlabel("Longitude [deg]")
+# plt.ylabel("Latitude [deg]")
+# plt.contourf(np.rad2deg(phi), np.rad2deg(t), np.absolute(error[10, :19, :, 0])/validation_data[10, :19, :, 0]*100,
+#                 cmap="inferno", levels=900)
+# plt.colorbar()
+# plt.grid(True)
+# plt.tight_layout()
+# plt.savefig('output/ReconstructionError_nn.png')
+# error_norm_nn = linalg.norm(decoded - validation_data_resh)  # , ord=inf
+# print('error_norm_nn:', error_norm_nn)
+
+# # foo()
+# # csv_handler.save_data()
 
