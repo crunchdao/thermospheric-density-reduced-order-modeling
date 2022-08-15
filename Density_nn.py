@@ -104,7 +104,10 @@ num_modes = 10
 
 def build_model(hp):
     bottle = hp.Int("bottle", min_value=5, max_value=10)
-    act = hp.Choice("activation", ["relu", "tanh"])
+
+    # act = hp.Choice("activation", ["relu", "tanh"])
+    act = "relu"
+    
     nlayers = hp.Int("num_layers", 1, 3)
     n_neurons = hp.Int("n_neurons", 4, 8)
 
