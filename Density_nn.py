@@ -29,6 +29,7 @@ for year in years:
                                   header=None)
     
     density_np = pd.DataFrame.to_numpy(density_df)
+    
     del density_df
 
     nt = 19
@@ -173,7 +174,7 @@ for year in years:
 
         history = autoencoder.fit(training_data_resh, training_data_resh,
                         batch_size=5,  # play with me
-                        epochs= 5,  # 200
+                        epochs= 200,  # 200
                         shuffle=True,
                         validation_data=(validation_data_resh, validation_data_resh))
 
