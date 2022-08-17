@@ -104,10 +104,7 @@ num_modes = 10
 
 def build_model(hp):
     bottle = hp.Int("bottle", min_value=5, max_value=10)
-
-    # act = hp.Choice("activation", ["relu", "tanh"])
     act = "relu"
-    
     nlayers = hp.Int("num_layers", 1, 3)
     n_neurons = hp.Int("n_neurons", 4, 8)
 
@@ -157,7 +154,7 @@ def build_model(hp):
 tuner = keras_tuner.RandomSearch(
     build_model,
     objective='val_loss',
-    max_trials=96)
+    max_trials=90)
 
 tuner.search(training_data_resh, training_data_resh, epochs=200, validation_data=(validation_data_resh, validation_data_resh))
 best_model = tuner.get_best_models()[0]
@@ -167,28 +164,29 @@ best_model = tuner.get_best_models()[0]
 # Vahid, these is the model for you:
 
 # Value             |Best Value So Far |Hyperparameter
-# 5                 |9                 |bottle
-# relu              |tanh              |activation
-# 2                 |2                 |num_layers
-# 8                 |6                 |n_neurons
+# 7                 |5                 |bottle
+# 2                 |3                 |num_layers
+# 8                 |8                 |n_neurons
 
 class Autoencoder(Model):
     def __init__(self):
         super(Autoencoder, self).__init__()
         self.encoder = tf.keras.Sequential([
                 layers.Flatten(),
-                layers.Dense(20 * 24 * 4, activation='tanh'),
+                layers.Dense(20 * 24 * 4, activation='relu'),
 
-                layers.Dense(128, activation='tanh'),
-                layers.Dense(64, activation='tanh'),
-                layers.Dense(9, activation='tanh')           
+                layers.Dense(1024, activation='relu'),
+                layers.Dense(512, activation='relu'),
+                layers.Dense(256, activation='relu'),
+                layers.Dense(5, activation='relu')           
         ])
         self.decoder = tf.keras.Sequential([
-                layers.Input(shape=(9)),
-                layers.Dense(64, activation='tanh'),
-                layers.Dense(128, activation='tanh'),
+                layers.Input(shape=(5)),
+                layers.Dense(256, activation='relu'),
+                layers.Dense(512, activation='relu'),
+                layers.Dense(1024, activation='relu'),
 
-                layers.Dense(20 * 24 * 4, activation='tanh')
+                layers.Dense(20 * 24 * 4, activation='relu')
         ])
 
     def call(self, x):
