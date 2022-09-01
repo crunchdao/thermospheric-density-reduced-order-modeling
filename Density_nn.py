@@ -23,6 +23,7 @@ import os
 mpl.use('Agg')
 
 years = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019']
+years = ['2013']
 for year in years:
     print(year)
     density_df = pd.read_csv('./Data/{}_HASDM_500-575KM.txt'.format(year), delim_whitespace=True,
@@ -37,16 +38,18 @@ for year in years:
 
     t = np.linspace(-np.pi / 2, np.pi / 2, nt)
     phi = np.linspace(0, np.deg2rad(345), nphi)
-
-    max_rho = np.max(density_np[:, 7])
-    density_np[:, 7] = density_np[:, 7] / max_rho
+    for i in range(density_np.shape[0]):
+        if density_np[i, 10] > 1e-6:
+            density_np[i, 10] = 1e-13
+    max_rho = np.max(density_np[:, 10])
+    density_np[:, 10] = density_np[:, 10] / max_rho
 
     rho_list = []
     rho_list1 = []
     rho_list2 = []
 
     for i in range(int(1331520 / (nt * nphi))):  # 1335168
-        rho_i = density_np[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), 7]
+        rho_i = density_np[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), 10]
         rho_polar_i = np.reshape(rho_i, (nt, nphi, 4))
 
         rho_list1.append(rho_polar_i)
@@ -151,10 +154,10 @@ for year in years:
                     layers.Dense(1024, activation='relu'),
                     layers.Dense(512, activation='relu'),
                     layers.Dense(256, activation='relu'),
-                    layers.Dense(5, activation='relu')           
+                    layers.Dense(10, activation='relu')           
             ])
             self.decoder = tf.keras.Sequential([
-                    layers.Input(shape=(5)),
+                    layers.Input(shape=(10)),
                     layers.Dense(256, activation='relu'),
                     layers.Dense(512, activation='relu'),
                     layers.Dense(1024, activation='relu'),
@@ -226,4 +229,3 @@ for year in years:
     plt.savefig('output/ReconstructionError_nn_{}.png'.format(year))
     error_norm_nn = linalg.norm(decoded - validation_data_resh)  # , ord=inf
     print('error_norm_nn:', error_norm_nn)
-    np.savetxt('output/atm_{}/encoded.txt'.format(year), error_norm_nn, delimiter=',')
