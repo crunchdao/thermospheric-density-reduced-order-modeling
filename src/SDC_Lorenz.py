@@ -1,3 +1,6 @@
+# Credits to the authors of the work "Data-driven discovery of coordinates and governing equations":
+# Kathleen Champion, Bethany Lusch, J. Nathan Kutz, Steven L. Brunton
+
 import numpy as np
 from scipy.integrate import odeint
 from scipy.special import legendre
@@ -12,7 +15,6 @@ import pandas as pd
 
 plot = 0  # 1 true, 0 false
 linear = 0  # 1 true, 0 false
-
 
 def get_lorenz_data(n_ics, noise_strength=0):
     """
