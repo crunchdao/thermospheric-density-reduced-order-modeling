@@ -38,7 +38,6 @@ pytest-html = "^3.1.1"
 pytest-cov = "^3.0.0"
 matplotlib = "^3.5.2"
 pandas = "^1.4.4"
-modred = "^2.1.0"
 scikit-learn = "^1.1.2"
 scipy = { version = "^1.9.1", python = ">=3.9,<3.12" }
 ipykernel = "^6.15.2"

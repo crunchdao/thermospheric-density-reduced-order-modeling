@@ -32,7 +32,3 @@ jobs:
     - name: Run style checks
       run: |
         make check-codestyle
-
-    - name: Run safety checks
-      run: |
-        make check-safety
