@@ -17,9 +17,13 @@ Python package for `Thermospheric Density Reduced Order Modeling` created with h
 
 ## Description
 
-"POD.py" deals with the POD of density. 
+In the context of the commercial activities performed in Low-Earth Orbit, a region of space of a few hundred kilometers of altitude, because the space traffic is increasing, it is important for us to obtain a model of the density field of the atmosphere, as the motion of the satellites in this orbital regime is strongly influenced by atmospheric drag, which is a function of the atmospheric density. 
 
-The two other Python codes are some toy examples to prove the methodologies.
+While such models, based on first principles, already exist, they are complex and require a lot of computations; at the same time, more empirical models are less accurate. 
+
+The trade-off proposed in this work, called reduced-order modeling, enables us to obtain a compressed representation of the density field, which can be used to construct predictive models, to perform uncertainty quantification and estimate the position of spacecraft in the future taking into account our knowledge of the environment and our availability of observation data. 
+
+We here focus on non-linear methods, to perform the compression, using Machine Learning Methods. In particular, the use of Neural Networks is compared with the use of Support Vector Machine Methods. Interestingly, for the datasets investigated, the latter technique is not only much more efficient, but also more accurate.
 
 ## Clone repository with Large Files (LFS)
 
@@ -29,7 +33,7 @@ Please install [git-lfs](https://git-lfs.github.com/) and use this command to cl
 git lfs clone https://github.com/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling.git
 ```
 
-### Makefile usage
+## Installation
 
 [`Makefile`](https://github.com/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling/blob/master/Makefile) contains a lot of functions for faster development.
 
