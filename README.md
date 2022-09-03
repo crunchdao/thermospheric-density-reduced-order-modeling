@@ -1,4 +1,4 @@
-# KPCA_Autoencoders
+# TheremosphericDensity-ReducedOrderModeling
 
 "POD.py" deals with the POD of density. 
 
