@@ -11,7 +11,7 @@
 [![Semantic Versions](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--versions-e10079.svg)](https://github.com/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling/releases)
 [![License](https://img.shields.io/github/license/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling)](https://github.com/pPoincareTrajectories/ThermosphericDensity-ReducedOrderModeling/blob/master/LICENSE)
 
-Awesome `python-project` is a Python cli/package created with https://github.com/TezRomacH/python-package-template
+Python package for `Thermospheric Density Reduced Order Modeling` created with https://github.com/TezRomacH/python-package-template
 
 </div>
 
@@ -29,48 +29,18 @@ Please install [git-lfs](https://git-lfs.github.com/) and use this command to cl
 git lfs clone https://github.com/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling.git
 ```
 
-## Installation
-
-```bash
-pip install -U python-project
-```
-
-or install with `Poetry`
-
-```bash
-poetry add python-project
-```
-
-Then you can run
-
-```bash
-python-project --help
-```
-
-or with `Poetry`:
-
-```bash
-poetry run python-project --help
-```
-
 ### Makefile usage
 
-[`Makefile`](https://github.com/python_project/python-project/blob/master/Makefile) contains a lot of functions for faster development.
+[`Makefile`](https://github.com/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling/blob/master/Makefile) contains a lot of functions for faster development.
 
 <details>
-<summary>1. Download and remove Poetry</summary>
+<summary>1. Download Poetry</summary>
 <p>
 
 To download and install Poetry run:
 
 ```bash
 make poetry-download
-```
-
-To uninstall
-
-```bash
-make poetry-remove
 ```
 
 </p>
@@ -86,7 +56,7 @@ Install requirements:
 make install
 ```
 
-Pre-commit hooks coulb be installed after `git init` via
+Pre-commit hooks could be installed after `git init` via
 
 ```bash
 make pre-commit-install
@@ -123,97 +93,7 @@ make update-dev-deps
 ```
 
 <details>
-<summary>4. Code security</summary>
-<p>
-
-```bash
-make check-safety
-```
-
-This command launches `Poetry` integrity checks as well as identifies security issues with `Safety` and `Bandit`.
-
-```bash
-make check-safety
-```
-
-</p>
-</details>
-
-</p>
-</details>
-
-<details>
-<summary>5. Type checks</summary>
-<p>
-
-Run `mypy` static type checker
-
-```bash
-make mypy
-```
-
-</p>
-</details>
-
-<details>
-<summary>6. Tests with coverage badges</summary>
-<p>
-
-Run `pytest`
-
-```bash
-make test
-```
-
-</p>
-</details>
-
-<details>
-<summary>7. All linters</summary>
-<p>
-
-Of course there is a command to ~~rule~~ run all linters in one:
-
-```bash
-make lint
-```
-
-the same as:
-
-```bash
-make test && make check-codestyle && make mypy && make check-safety
-```
-
-</p>
-</details>
-
-<details>
-<summary>8. Docker</summary>
-<p>
-
-```bash
-make docker-build
-```
-
-which is equivalent to:
-
-```bash
-make docker-build VERSION=latest
-```
-
-Remove docker image with
-
-```bash
-make docker-remove
-```
-
-More information [about docker](https://github.com/python_project/python-project/tree/master/docker).
-
-</p>
-</details>
-
-<details>
-<summary>9. Cleanup</summary>
+<summary>4. Cleanup</summary>
 <p>
 Delete pycache files
 
