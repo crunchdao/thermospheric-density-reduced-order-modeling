@@ -1,4 +1,4 @@
-# TheremosphericDensity-ReducedOrderModeling
+# ThermosphericDensity-ReducedOrderModeling
 
 "POD.py" deals with the POD of density. 
 
