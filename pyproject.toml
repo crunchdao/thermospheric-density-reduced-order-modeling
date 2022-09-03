@@ -6,7 +6,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "td-rom"
 version = "0.1.0"
-description = "Awesome `td-rom` is a Python package for Thermospheric Density Reduced Order Modeling"
+description = "Python package for `Thermospheric Density Reduced Order Modeling`"
 readme = "README.md"
 authors = ["Vahid Nateghi, Matteo Manzi"]
 license = "MIT"
