@@ -1,10 +1,21 @@
 # ThermosphericDensity-ReducedOrderModeling
 
+## Description
+
 "POD.py" deals with the POD of density. 
 
 The two other Python codes are some toy examples to prove the methodologies.
 
 The Matlab codes come from [this](https://it.mathworks.com/matlabcentral/fileexchange/39715-kernel-pca-and-pre-image-reconstruction) work and have been a reference point for us.
+
+
+## Clone repository with Large Files (LFS)
+
+Please install [git-lfs](https://git-lfs.github.com/) and use this command to clone our repository:
+
+```
+git lfs clone https://github.com/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling.git
+```
 
 ## Related packages
 

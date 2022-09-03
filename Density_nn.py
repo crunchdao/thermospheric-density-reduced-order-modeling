@@ -38,27 +38,25 @@ for year in years:
 
     t = np.linspace(-np.pi / 2, np.pi / 2, nt)
     phi = np.linspace(0, np.deg2rad(345), nphi)
-    for i in range(density_np.shape[0]):
-        if density_np[i, 10] > 1e-6:
-            density_np[i, 10] = 1e-13
-    max_rho = np.max(density_np[:, 10])
-    density_np[:, 10] = density_np[:, 10] / max_rho
+
+    max_rho = np.max(density_np[:, -1])
+    density_np[:, -1] = density_np[:, -1] / max_rho
 
     rho_list = []
     rho_list1 = []
     rho_list2 = []
 
-    for i in range(int(1331520 / (nt * nphi))):  # 1335168
-        rho_i = density_np[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), 10]
+    for i in range(int(1331520 / (nt * nphi))):  
+        rho_i = density_np[i * (4 * nt * nphi):(i + 1) * (4 * nt * nphi), -1]
         rho_polar_i = np.reshape(rho_i, (nt, nphi, 4))
 
         rho_list1.append(rho_polar_i)
 
     rho = np.array(rho_list1)
 
-    rho_zeros = np.zeros((2920, 20, 24, 4))  # 5840, 20, 24, 4
+    rho_zeros = np.zeros((2920, 20, 24, 4))  
     rho_zeros[:, :nt, :nphi, :] = rho
-    del rho_list1, rho  #, rho_list2, rho1, rho2
+    del rho_list1, rho 
 
     training_data = rho_zeros[:2000]
     validation_data = rho_zeros[2000:]
@@ -67,12 +65,11 @@ for year in years:
     nPoints_val = len(rho_zeros) - len(training_data)
     validation_data_resh = np.reshape(validation_data, newshape=(nPoints_val, 20*24*4))
 
-    nPoints_val = 920  # 840
+    nPoints_val = 920  
     validation_data_resh = np.reshape(validation_data, newshape=(nPoints_val, 20*24*4))
     rhoavg = np.mean(validation_data_resh, axis=0)  # Compute mean
     rho_msub_val = validation_data_resh.T - np.tile(rhoavg, (nPoints_val, 1)).T  # Mean-subtracted data
 
-    # print(training_data_resh.shape)
     rhoavg = np.mean(training_data_resh, axis=0)  # Compute mean
     nPoints = 2000
     rho_msub = training_data_resh.T - np.tile(rhoavg, (nPoints, 1)).T  # Mean-subtracted data
@@ -136,14 +133,6 @@ for year in years:
 # best_model = tuner.get_best_models()[0]
 
 
-
-# Vahid, these is the model for you:
-
-# Value             |Best Value So Far |Hyperparameter
-# 7                 |5                 |bottle
-# 2                 |3                 |num_layers
-# 8                 |8                 |n_neurons
-
     class Autoencoder(Model):
         def __init__(self):
             super(Autoencoder, self).__init__()
@@ -176,8 +165,8 @@ for year in years:
         autoencoder.compile(optimizer='adam', loss=losses.MeanSquaredError())
 
         history = autoencoder.fit(training_data_resh, training_data_resh,
-                        batch_size=5,  # play with me
-                        epochs= 200,  # 200
+                        batch_size=5, 
+                        epochs= 200,  
                         shuffle=True,
                         validation_data=(validation_data_resh, validation_data_resh))
 
@@ -203,7 +192,7 @@ for year in years:
     np.savetxt('output/atm_{}/decoded.txt'.format(year), decoded, delimiter=',')
     if run:
         plt.figure()
-        plt.rcParams.update({'font.size': 14})  # increase the font size
+        plt.rcParams.update({'font.size': 14}) 
         mpl.rcParams['legend.fontsize'] = 15
         plt.xlabel("Number of Epoch")
         plt.ylabel("Loss")
@@ -217,7 +206,7 @@ for year in years:
     error = decoded - validation_data_resh 
     error = np.reshape(error, newshape=(nPoints_val, 20, 24, 4))
     plt.figure() 
-    plt.rcParams.update({'font.size': 14})  # increase the font size
+    plt.rcParams.update({'font.size': 14}) 
     mpl.rcParams['legend.fontsize'] = 15
     plt.xlabel("Longitude [deg]")
     plt.ylabel("Latitude [deg]")
@@ -227,5 +216,5 @@ for year in years:
     plt.grid(True)
     plt.tight_layout()
     plt.savefig('output/ReconstructionError_nn_{}.png'.format(year))
-    error_norm_nn = linalg.norm(decoded - validation_data_resh)  # , ord=inf
+    error_norm_nn = linalg.norm(decoded - validation_data_resh)
     print('error_norm_nn:', error_norm_nn)

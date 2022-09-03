@@ -85,7 +85,6 @@ def generate_lorenz_data(ics, t, n_points, normalization=None, sigma=10, beta=8/
     for i in range(n_ics):
         z[i] = simulate_lorenz(ics[i], t, sigma=sigma, beta=beta, rho=rho)
 
-    # test = z.max()
 
     if normalization is not None:
         z *= normalization
@@ -122,13 +121,6 @@ def generate_lorenz_data(ics, t, n_points, normalization=None, sigma=10, beta=8/
             else:
                 x[i, j] = x1[i, j] + x2[i, j] + x3[i, j] + x4[i, j] + x5[i, j] + x6[i, j]
 
-    # data = {}
-    # data['t'] = t
-    # data['y_spatial'] = y_spatial
-    # data['modes'] = modes
-    # data['x'] = x
-    # data['z'] = z
-
     return x  # data
 
 
@@ -141,8 +133,12 @@ def main():
         validation_data = get_lorenz_data(10, noise_strength=noise_strength)
 
         training_data = np.reshape(training_data, (1024*250, 128))
-        validation_data = np.reshape(validation_data, (10*250, 128))
+        np.random.shuffle(training_data)
+        # training_data = training_data[:1024*10,:]
 
+        validation_data = np.reshape(validation_data, (10*250, 128))
+        np.random.shuffle(validation_data)
+        # validation_data = validation_data[:10*50,:]
         latent_dim = 3
 
         if linear:
@@ -192,9 +188,9 @@ def main():
 
         autoencoder = Autoencoder(latent_dim)
         autoencoder.compile(optimizer='adam', loss=losses.MeanSquaredError())
-
+        epochs = 2 
         history = autoencoder.fit(training_data, training_data,
-                        epochs= 500,  # 20
+                        epochs= epochs,  # 20
                         shuffle=True,
                         validation_data=(validation_data, validation_data))
 
@@ -211,7 +207,7 @@ def main():
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
-        plt.savefig('output/loss%s_5epochs.png' % linear)
+        plt.savefig('output/loss%s_%sepochs_lorenz.png' % (linear,epochs))
 
 
         encoded = autoencoder.encoder(validation_data).numpy()
@@ -239,17 +235,17 @@ def main():
         ax1.view_init(azim=120)
         plt.savefig('output/lorenz0.png', bbox_inches = "tight")
 
-        lorenz1_df = pd.read_csv('output/lorenz1.txt')
-        lorenz1_np = pd.DataFrame.to_numpy(lorenz1_df)
+        # lorenz1_df = pd.read_csv('output/lorenz1.txt')
+        # lorenz1_np = pd.DataFrame.to_numpy(lorenz1_df)
 
-        fig1 = plt.figure(figsize=(3, 3))
-        ax1 = fig1.add_subplot(111, projection='3d')
-        ax1.plot(lorenz1_np[2*l:3*l, 0], lorenz1_np[2*l:3*l, 1], lorenz1_np[2*l:3*l, 2], linewidth=2)
-        ax1.set_xlabel(r'$z_1$')
-        ax1.set_ylabel(r'$z_2$')
-        ax1.set_zlabel(r'$z_3$')
-        ax1.view_init(azim=120)
-        plt.savefig('output/lorenz1.png', bbox_inches = "tight")
+        # fig1 = plt.figure(figsize=(3, 3))
+        # ax1 = fig1.add_subplot(111, projection='3d')
+        # ax1.plot(lorenz1_np[2*l:3*l, 0], lorenz1_np[2*l:3*l, 1], lorenz1_np[2*l:3*l, 2], linewidth=2)
+        # ax1.set_xlabel(r'$z_1$')
+        # ax1.set_ylabel(r'$z_2$')
+        # ax1.set_zlabel(r'$z_3$')
+        # ax1.view_init(azim=120)
+        # plt.savefig('output/lorenz1.png', bbox_inches = "tight")
 
         encoded0_df = pd.read_csv('output/encoded0.txt')
         encoded0_np = pd.DataFrame.to_numpy(encoded0_df)
@@ -262,19 +258,6 @@ def main():
         ax1.set_zlabel(r'$z_3$')
         ax1.view_init(azim=120)
         plt.savefig('output/encoded0.png', bbox_inches = "tight")
-
-        # encoded1_df = pd.read_csv('output/encoded1.txt')
-        # encoded1_np = pd.DataFrame.to_numpy(encoded1_df)
-
-        # fig1 = plt.figure(figsize=(3, 3))
-        # ax1 = fig1.add_subplot(111, projection='3d')
-        # ax1.plot(encoded1_np[2*l:3*l, 0], encoded1_np[2*l:3*l, 1], encoded1_np[2*l:3*l, 2], linewidth=2)
-        # ax1.set_xlabel(r'$z_1$')
-        # ax1.set_ylabel(r'$z_2$')
-        # ax1.set_zlabel(r'$z_3$')
-        # plt.show()
-        # ax1.view_init(elev=100, azim=180)  # 80 200
-        # plt.savefig('output/encoded1.png', bbox_inches = "tight")
 
         vd0_df = pd.read_csv('output/validation_data0.txt')
         vd0_np = pd.DataFrame.to_numpy(vd0_df)
@@ -290,19 +273,19 @@ def main():
         # ax1.view_init(elev=0, azim=90)
         plt.savefig('output/vd0.png', bbox_inches="tight")
 
-        vd1_df = pd.read_csv('output/validation_data1.txt')
-        vd1_np = pd.DataFrame.to_numpy(vd1_df)
+        # vd1_df = pd.read_csv('output/validation_data1.txt')
+        # vd1_np = pd.DataFrame.to_numpy(vd1_df)
 
-        fig1 = plt.figure(figsize=(3, 3))
-        ax1 = fig1.add_subplot(111) # , projection='3d')
-        ax1.plot(vd1_np[:l, 0], vd1_np[:l, 1], linewidth=2)  # , vd1_np[:l, 2]
-        ax1.set_xlabel(r'$x_1$')
-        ax1.set_ylabel(r'$x_2$')
-        # ax1.set_zlabel(r'$x_3$')
-        plt.grid(True)
+        # fig1 = plt.figure(figsize=(3, 3))
+        # ax1 = fig1.add_subplot(111) # , projection='3d')
+        # ax1.plot(vd1_np[:l, 0], vd1_np[:l, 1], linewidth=2)  # , vd1_np[:l, 2]
+        # ax1.set_xlabel(r'$x_1$')
+        # ax1.set_ylabel(r'$x_2$')
+        # # ax1.set_zlabel(r'$x_3$')
+        # plt.grid(True)
 
-        # ax1.view_init(azim=120)
-        plt.savefig('output/vd1.png', bbox_inches="tight")
+        # # ax1.view_init(azim=120)
+        # plt.savefig('output/vd1.png', bbox_inches="tight")
 
         decoded0_df = pd.read_csv('output/decoded0.txt')
         decoded0_np = pd.DataFrame.to_numpy(decoded0_df)
@@ -341,16 +324,6 @@ def main():
         # ax1.view_init(azim=120)
         plt.savefig('output/delta0.png', bbox_inches="tight")
 
-        # fig1 = plt.figure(figsize=(3, 3))
-        # ax1 = fig1.add_subplot(111)  # , projection='3d')
-        # ax1.plot(vd1_np[:l, 0] - decoded1_np[:l, 0], vd1_np[:l, 1] - decoded1_np[:l, 1], 'r', linewidth=2)  #  vd1_np[:l, 2] - decoded1_np[:l, 2],
-        # ax1.set_xlabel(r'$x_1$')
-        # ax1.set_ylabel(r'$x_2$')
-        # # ax1.set_zlabel(r'$x_3$')
-        # plt.grid(True)
-
-        # # ax1.view_init(azim=120)
-        # plt.savefig('output/delta1.png', bbox_inches="tight")
 
     return 0
 
