@@ -12,7 +12,7 @@
 [![License](https://img.shields.io/github/license/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling)](https://github.com/pPoincareTrajectories/ThermosphericDensity-ReducedOrderModeling/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/454101625.svg)](https://zenodo.org/badge/latestdoi/454101625)
 
-Python package for `Thermospheric Density Reduced Order Modeling` created with https://github.com/TezRomacH/python-package-template
+Python package for `Thermospheric Density Reduced Order Modeling` created with [this template](https://github.com/TezRomacH/python-package-template)
 
 
 </div>
