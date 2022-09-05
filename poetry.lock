@@ -456,7 +456,7 @@ numpy = ">=1.14.5"
 
 [[package]]
 name = "identify"
-version = "2.5.3"
+version = "2.5.4"
 description = "File identification library for Python"
 category = "dev"
 optional = false
@@ -2120,8 +2120,8 @@ h5py = [
     {file = "h5py-3.7.0.tar.gz", hash = "sha256:3fcf37884383c5da64846ab510190720027dca0768def34dd8dcb659dbe5cbf3"},
 ]
 identify = [
-    {file = "identify-2.5.3-py2.py3-none-any.whl", hash = "sha256:25851c8c1370effb22aaa3c987b30449e9ff0cece408f810ae6ce408fdd20893"},
-    {file = "identify-2.5.3.tar.gz", hash = "sha256:887e7b91a1be152b0d46bbf072130235a8117392b9f1828446079a816a05ef44"},
+    {file = "identify-2.5.4-py2.py3-none-any.whl", hash = "sha256:962d9bec27ccd1fcceff9b11f8c635afeb163ea3d8b6b30d8f1eee37ec7fac47"},
+    {file = "identify-2.5.4.tar.gz", hash = "sha256:b020e876cec2b11dadb3324fa0427eb744b7d66ef19ac579a748dfff774b6dcf"},
 ]
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
