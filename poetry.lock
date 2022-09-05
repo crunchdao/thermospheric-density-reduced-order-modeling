@@ -1092,7 +1092,7 @@ plugins = ["importlib-metadata"]
 
 [[package]]
 name = "pyJoules"
-version = "0.2.5"
+version = "0.5.1"
 description = ""
 category = "dev"
 optional = false
@@ -1747,7 +1747,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "3f60325071af78104396bd50f0fcf62a8ac2e2e9cb1204ea6a1ae392905c9b98"
+content-hash = "f365035ea626db727df2c5aeb4c61f3259845ffd11dfbe9376e6ee7e7c64df5e"
 
 [metadata.files]
 absl-py = [
@@ -2705,8 +2705,8 @@ Pygments = [
     {file = "Pygments-2.13.0.tar.gz", hash = "sha256:56a8508ae95f98e2b9bdf93a6be5ae3f7d8af858b43e02c5a2ff083726be40c1"},
 ]
 pyJoules = [
-    {file = "pyJoules-0.2.5-py2.py3-none-any.whl", hash = "sha256:c7711a25e5bb62b8735fad3a55db30a98a01d771c102f9696f3a8254d3ab2b20"},
-    {file = "pyJoules-0.2.5.tar.gz", hash = "sha256:9afdbd9d4d7865cddd20cc4d3af7bfef792f877c4b9d79fc866ce7cda3084d67"},
+    {file = "pyJoules-0.5.1-py2.py3-none-any.whl", hash = "sha256:558505e13b7e24ff2aceb5eab6e497f7cee101ed2605343238f25ff4750909cb"},
+    {file = "pyJoules-0.5.1.tar.gz", hash = "sha256:9aae7594593cf26bdcac0e597c21fd326ce937bd2e93767bd6279c6bad0c8dc8"},
 ]
 pylint = [
     {file = "pylint-2.15.0-py3-none-any.whl", hash = "sha256:4b124affc198b7f7c9b5f9ab690d85db48282a025ef9333f51d2d7281b92a6c3"},
