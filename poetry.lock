@@ -1106,14 +1106,14 @@ pandas = ["pandas (>=0.25.1)"]
 
 [[package]]
 name = "pylint"
-version = "2.15.0"
+version = "2.15.2"
 description = "python code static checker"
 category = "dev"
 optional = false
 python-versions = ">=3.7.2"
 
 [package.dependencies]
-astroid = ">=2.12.4,<=2.14.0-dev0"
+astroid = ">=2.12.9,<=2.14.0-dev0"
 colorama = {version = ">=0.4.5", markers = "sys_platform == \"win32\""}
 dill = ">=0.2"
 isort = ">=4.2.5,<6"
@@ -1676,7 +1676,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "virtualenv"
-version = "20.16.4"
+version = "20.16.5"
 description = "Virtual Python Environment builder"
 category = "dev"
 optional = false
@@ -2709,8 +2709,8 @@ pyJoules = [
     {file = "pyJoules-0.5.1.tar.gz", hash = "sha256:9aae7594593cf26bdcac0e597c21fd326ce937bd2e93767bd6279c6bad0c8dc8"},
 ]
 pylint = [
-    {file = "pylint-2.15.0-py3-none-any.whl", hash = "sha256:4b124affc198b7f7c9b5f9ab690d85db48282a025ef9333f51d2d7281b92a6c3"},
-    {file = "pylint-2.15.0.tar.gz", hash = "sha256:4f3f7e869646b0bd63b3dfb79f3c0f28fc3d2d923ea220d52620fd625aed92b0"},
+    {file = "pylint-2.15.2-py3-none-any.whl", hash = "sha256:cc3da458ba810c49d330e09013dec7ced5217772dec8f043ccdd34dae648fde8"},
+    {file = "pylint-2.15.2.tar.gz", hash = "sha256:f63404a2547edb5247da263748771ac9a806ed1de4174cda01293c08ddbc2999"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
@@ -3102,8 +3102,8 @@ urllib3 = [
     {file = "urllib3-1.26.12.tar.gz", hash = "sha256:3fa96cf423e6987997fc326ae8df396db2a8b7c667747d47ddd8ecba91f4a74e"},
 ]
 virtualenv = [
-    {file = "virtualenv-20.16.4-py3-none-any.whl", hash = "sha256:035ed57acce4ac35c82c9d8802202b0e71adac011a511ff650cbcf9635006a22"},
-    {file = "virtualenv-20.16.4.tar.gz", hash = "sha256:014f766e4134d0008dcaa1f95bafa0fb0f575795d07cae50b1bee514185d6782"},
+    {file = "virtualenv-20.16.5-py3-none-any.whl", hash = "sha256:d07dfc5df5e4e0dbc92862350ad87a36ed505b978f6c39609dc489eadd5b0d27"},
+    {file = "virtualenv-20.16.5.tar.gz", hash = "sha256:227ea1b9994fdc5ea31977ba3383ef296d7472ea85be9d6732e42a91c04e80da"},
 ]
 wcwidth = [
     {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
