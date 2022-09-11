@@ -35,23 +35,10 @@ git lfs clone https://github.com/PoincareTrajectories/ThermosphericDensity-Reduc
 
 ## Installation
 
-[`Makefile`](https://github.com/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling/blob/master/Makefile) contains a lot of functions for faster development.
+[`Makefile`](https://github.com/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling/blob/master/Makefile) contains functions for faster development.
 
 <details>
-<summary>1. Download Poetry</summary>
-<p>
-
-To download and install Poetry run:
-
-```bash
-make poetry-download
-```
-
-</p>
-</details>
-
-<details>
-<summary>2. Install all dependencies and pre-commit hooks</summary>
+<summary>1. Install all dependencies and pre-commit hooks</summary>
 <p>
 
 Install requirements:
@@ -70,7 +57,7 @@ make pre-commit-install
 </details>
 
 <details>
-<summary>3. Codestyle</summary>
+<summary>2. Codestyle</summary>
 <p>
 
 Automatic formatting uses `pyupgrade`, `isort` and `black`.
@@ -95,9 +82,9 @@ Update all dev libraries to the latest version using one comand
 ```bash
 make update-dev-deps
 ```
-
+</details>
 <details>
-<summary>4. Cleanup</summary>
+<summary>3. Cleanup</summary>
 <p>
 Delete pycache files
 
