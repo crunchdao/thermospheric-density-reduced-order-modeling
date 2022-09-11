@@ -10,8 +10,10 @@
 [![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling/blob/master/.pre-commit-config.yaml)
 [![Semantic Versions](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--versions-e10079.svg)](https://github.com/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling/releases)
 [![License](https://img.shields.io/github/license/PoincareTrajectories/ThermosphericDensity-ReducedOrderModeling)](https://github.com/pPoincareTrajectories/ThermosphericDensity-ReducedOrderModeling/blob/master/LICENSE)
+[![DOI](https://zenodo.org/badge/454101625.svg)](https://zenodo.org/badge/latestdoi/454101625)
 
-Python package for `Thermospheric Density Reduced Order Modeling` created with https://github.com/TezRomacH/python-package-template
+Python package for `Thermospheric Density Reduced Order Modeling` created with [this template](https://github.com/TezRomacH/python-package-template).
+
 
 </div>
 
