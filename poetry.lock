@@ -1568,11 +1568,14 @@ tensorflow-rocm = ["tensorflow-rocm (>=2.9.0,<2.10.0)"]
 
 [[package]]
 name = "termcolor"
-version = "1.1.0"
-description = "ANSII Color formatting for output in terminal."
+version = "2.0.1"
+description = "ANSI color formatting for output in terminal"
 category = "dev"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
+
+[package.extras]
+tests = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "threadpoolctl"
@@ -3051,7 +3054,8 @@ tensorflow-io-gcs-filesystem = [
     {file = "tensorflow_io_gcs_filesystem-0.26.0-cp39-cp39-win_amd64.whl", hash = "sha256:2940b4ab6848ef5ec34dc3c140b5ae9eba0da13453da839c30ebe3461a6eb51d"},
 ]
 termcolor = [
-    {file = "termcolor-1.1.0.tar.gz", hash = "sha256:1d6d69ce66211143803fbc56652b41d73b4a400a2891d7bf7a1cdf4c02de613b"},
+    {file = "termcolor-2.0.1-py3-none-any.whl", hash = "sha256:7e597f9de8e001a3208c4132938597413b9da45382b6f1d150cff8d062b7aaa3"},
+    {file = "termcolor-2.0.1.tar.gz", hash = "sha256:6b2cf769e93364a2676e1de56a7c0cff2cf5bd07f37e9cc80b0dd6320ebfe388"},
 ]
 threadpoolctl = [
     {file = "threadpoolctl-3.1.0-py3-none-any.whl", hash = "sha256:8b99adda265feb6773280df41eece7b2e6561b772d21ffd52e372f999024907b"},
