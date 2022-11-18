@@ -37,7 +37,7 @@ coverage = "^6.1.2"
 coverage-badge = "^1.1.0"
 pytest-html = "^3.2.0"
 pytest-cov = "^4.0.0"
-matplotlib = "^3.5.2"
+matplotlib = "^3.6.2"
 pandas = "^1.5.1"
 scikit-learn = "^1.1.2"
 scipy = { version = "^1.9.3", python = ">=3.9,<3.12" }
