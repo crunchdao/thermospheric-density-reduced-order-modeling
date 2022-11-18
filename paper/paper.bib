@@ -1,0 +1,320 @@
+@ARTICLE{GG_2020,title={A kernel Principal Component Analysis (kPCA) digest with a new backward mapping (pre-image reconstruction) strategy},year={2020},author={Alberto García-González and Antonio Huerta and Sergio Zlotnik and Pedro Díez},doi={10.21203/rs.3.rs-126052/v1},pmid={null},pmcid={null},mag_id={3000465807},journal={arXiv: Numerical Analysis},abstract={Methodologies for multidimensionality reduction aim at discovering low-dimensional manifolds where data ranges. Principal Component Analysis (PCA) is very effective if data have linear structure. But fails in identifying a possible dimensionality reduction if data belong to a nonlinear low-dimensional manifold. For nonlinear dimensionality reduction, kernel Principal Component Analysis (kPCA) is appreciated because of its simplicity and ease implementation. The paper provides a concise review of PCA and kPCA main ideas, trying to collect in a single document aspects that are often dispersed. Moreover, a strategy to map back the reduced dimension into the original high dimensional space is also devised, based on the minimization of a discrepancy functional.}}
+@ARTICLE{Berger_2020,title={Flying Through Uncertainty},year={2020},author={Thomas E Berger and M. J. Holzinger and Marcus J. Holzinger and Eric K. Sutton and Jeffrey P. Thayer},doi={10.1029/2019sw002373},pmid={null},pmcid={null},mag_id={2998591294},journal={Space Weather-the International Journal of Research and Applications},abstract={null}}
+@ARTICLE{Díez_2021,title={Nonlinear dimensionality reduction for parametric problems: a kernel Proper Orthogonal Decomposition (kPOD)},year={2021},author={Pedro Díez and Alba Muixí and Sergio Zlotnik and Alberto García-González},doi={10.1002/nme.6831},pmid={null},pmcid={null},mag_id={3159572576},journal={arXiv: Numerical Analysis},abstract={Reduced-order models are essential tools to deal with parametric problems in the context of optimization, uncertainty quantification, or control and inverse problems. The set of parametric solutions lies in a low-dimensional manifold (with dimension equal to the number of independent parameters) embedded in a large-dimensional space (dimension equal to the number of degrees of freedom of the full-order discrete model). A posteriori model reduction is based on constructing a basis from a family of snapshots (solutions of the full-order model computed offline), and then use this new basis to solve the subsequent instances online. Proper Orthogonal Decomposition (POD) reduces the problem into a linear subspace of lower dimension, eliminating redundancies in the family of snapshots. The strategy proposed here is to use a nonlinear dimensionality reduction technique, namely the kernel Principal Component Analysis (kPCA), in order to find a nonlinear manifold, with an expected much lower dimension, and to solve the problem in this low-dimensional manifold. Guided by this paradigm, the methodology devised here introduces different novel ideas, namely: 1) characterizing the nonlinear manifold using local tangent spaces, where the reduced-order problem is linear and based on the neighbouring snapshots, 2) the approximation space is enriched with the cross-products of the snapshots, introducing a quadratic description, 3) the kernel for kPCA is defined ad-hoc, based on physical considerations, and 4) the iterations in the reduced-dimensional space are performed using an algorithm based on a Delaunay tessellation of the cloud of snapshots in the reduced space. The resulting computational strategy is performing outstandingly in the numerical tests, alleviating many of the problems associated with POD and improving the numerical accuracy.}}
+@ARTICLE{Honeine_2011,title={Preimage Problem in Kernel-Based Machine Learning},year={2011},author={Paul Honeine and Cedric Richard},doi={10.1109/msp.2010.939747},pmid={null},pmcid={null},mag_id={2075241504},journal={IEEE Signal Processing Magazine},abstract={While the nonlinear mapping from the input space to the feature space is central in kernel methods, the reverse mapping from the feature space back to the input space is also of primary interest. This is the case in many applications, including kernel principal component analysis (PCA) for signal and image denoising. Unfortunately, it turns out that the reverse mapping generally does not exist and only a few elements in the feature space have a valid preimage in the input space. The preimage problem consists of finding an approximate solution by identifying data in the input space based on their corresponding features in the high dimensional feature space. It is essentially a dimensionality-reduction problem, and both have been intimately connected in their historical evolution, as studied in this article.}}
+@ARTICLE{Kwok_2004,title={The pre-image problem in kernel methods},year={2004},author={James T. Kwok and Ivor W. Tsang},doi={10.1109/tnn.2004.837781},pmid={15565778},pmcid={null},mag_id={2133396101},journal={IEEE Transactions on Neural Networks},abstract={In this paper, we address the problem of finding the pre-image of a feature vector in the feature space induced by a kernel. This is of central importance in some kernel applications, such as on using kernel principal component analysis (PCA) for image denoising. Unlike the traditional method in which relies on nonlinear optimization, our proposed method directly finds the location of the pre-image based on distance constraints in the feature space. It is noniterative, involves only linear algebra and does not suffer from numerical instability or local minimum problems. Evaluations on performing kernel PCA and kernel clustering on the USPS data set show much improved performance.}}
+@ARTICLE{Mika_1998,title={Kernel PCA and De-Noising in Feature Spaces},year={1998},author={Sebastian Mika and Bernhard Schölkopf and Alexander J. Smola and Klaus-Robert Müller and Matthias Scholz and Gunnar Rätsch},doi={null},pmid={null},pmcid={null},mag_id={2105732805},journal={NIPS},abstract={Kernel PCA as a nonlinear feature extractor has proven powerful as a preprocessing step for classification algorithms. But it can also be considered as a natural generalization of linear principal component analysis. This gives rise to the question how to use nonlinear features for data compression, reconstruction, and de-noising, applications common in linear PCA. This is a nontrivial task, as the results provided by kernel PCA live in some high dimensional feature space and need not have pre-images in input space. This work presents ideas for finding approximate pre-images, focusing on Gaussian kernels, and shows experimental results using these pre-images in data reconstruction and de-noising on toy 
+examples as well as on real world data.}}
+@ARTICLE{Champion_2019,title={Data-driven discovery of coordinates and governing equations},year={2019},author={Kathleen P. Champion and Bethany Lusch and J. Nathan Kutz and Steven L. Brunton},doi={10.1073/pnas.1906995116},pmid={31636218},pmcid={null},mag_id={2930380020},journal={arXiv: Other Statistics},abstract={The discovery of governing equations from scientific data has the potential to transform data-rich fields that lack well-characterized quantitative descriptions. Advances in sparse regression are currently enabling the tractable identification of both the structure and parameters of a nonlinear dynamical system from data. The resulting models have the fewest terms necessary to describe the dynamics, balancing model complexity with descriptive ability, and thus promoting interpretability and generalizability. This provides an algorithmic approach to Occam's razor for model discovery. However, this approach fundamentally relies on an effective coordinate system in which the dynamics have a simple representation. In this work, we design a custom autoencoder to discover a coordinate transformation into a reduced space where the dynamics may be sparsely represented. Thus, we simultaneously learn the governing equations and the associated coordinate system. We demonstrate this approach on several example high-dimensional dynamical systems with low-dimensional behavior. The resulting modeling framework combines the strengths of deep neural networks for flexible representation and sparse identification of nonlinear dynamics (SINDy) for parsimonious models. It is the first method of its kind to place the discovery of coordinates and models on an equal footing.}}
+@ARTICLE{Bittracher_2020,title={Dimensionality Reduction of Complex Metastable Systems via Kernel Embeddings of Transition Manifolds},year={2020},author={Andreas Bittracher and Stefan Klus and Boumediene Hamzi and Péter Koltai and Christof Schütte},doi={10.1007/s00332-020-09668-z},pmid={null},pmcid={null},mag_id={3004048648},journal={arXiv: Dynamical Systems},abstract={We present a novel kernel-based machine learning algorithm for identifying the low-dimensional geometry of the effective dynamics of high-dimensional multiscale stochastic systems. Recently, the authors developed a mathematical framework for the computation of optimal reaction coordinates of such systems that is based on learning a parametrization of a low-dimensional transition manifold in a certain function space. In this article, we enhance this approach by embedding and learning this transition manifold in a reproducing kernel Hilbert space, exploiting the favorable properties of kernel embeddings. Under mild assumptions on the kernel, the manifold structure is shown to be preserved under the embedding, and distortion bounds can be derived. This leads to a more robust and more efficient algorithm compared to previous parametrization approaches.}}
+@ARTICLE{Klus_2017,title={Data-driven model reduction and transfer operator approximation},year={2017},author={Stefan Klus and Feliks Nüske and Péter Koltai and Hao Wu and Hao Wu and Ioannis G. Kevrekidis and Christof Schütte and Frank Noé},doi={10.1007/s00332-017-9437-7},pmid={null},pmcid={null},mag_id={2615252773},journal={arXiv: Dynamical Systems},abstract={In this review paper, we will present different data-driven dimension reduction techniques for dynamical systems that are based on transfer operator theory as well as methods to approximate transfer operators and their eigenvalues, eigenfunctions, and eigenmodes. The goal is to point out similarities and differences between methods developed independently by the dynamical systems, fluid dynamics, and molecular dynamics communities such as time-lagged independent component analysis (TICA), dynamic mode decomposition (DMD), and their respective generalizations. As a result, extensions and best practices developed for one particular method can be carried over to other related methods.}}
+@ARTICLE{LeFloch_2021,title={Codpy - Advanced Tutorial},year={2021},author={Philippe G. LeFloch and Philippe G. LeFloch and Philippe G. LeFloch and Mercier Jean-Marc and Shohruh Miryusupov},doi={10.2139/ssrn.3769804},pmid={null},pmcid={null},mag_id={3128099209},journal={null},abstract={CodPy stands for “Curse of dimensionality in Python” and is a Support Vector Machine
+(SVM), application oriented, Python library. It provides tools for machine learning, statistical
+learning, and numerical simulations, and consists of an implementation of a method based on
+the theory of reproducing kernel Hilbert spaces (RKHS). We provide here a follow up of the
+first part entitled CodPy - a tutorial. This document has several purposes. First of all, our
+main tools are presented here as a reference manual for users1
+and encompasses two different
+classes of SVM tools. On one hand, we describe a kernel engineering technique, aiming to craft
+SVMs in order to adapt their kernels to a particular problem. On the other hand, as a tool
+available for any SVM, we present a rather complete set of differential operators, which are
+now in use for research and industrial problems. These operators provide us with elementary
+building block in order to design discrete algorithms for a broad set of partial differential
+equations. In addition, our metholology leads us quality tests that are applicable to any given
+kernel that can be input in a learning machine.}}
+@ARTICLE{Williams_2016,title={A kernel-based method for data-driven koopman spectral analysis},year={2016},author={Matthew O. Williams and Clarence W. Rowley and Ioannis G. Kevrekidis},doi={10.3934/jcd.2015005},pmid={null},pmcid={null},mag_id={2395962256},journal={ACM Journal of Computer Documentation},abstract={A data-driven, kernel-based method for approximating the leading Koopman
+eigenvalues, eigenfunctions, and modes in problems with high-dimensional state
+spaces is presented.
+
+This approach uses a set of scalar observables (functions that map a state to a scalar value) that are defined   implicitly  by the feature map associated with a user-defined kernel function.
+
+This circumvents the computational issues that arise due to the number of
+functions required to span a ``sufficiently rich'' subspace of all possible scalar observables in such applications.
+
+We illustrate this method on two examples: the first is the FitzHugh-Nagumo PDE,
+ a prototypical one-dimensional reaction-diffusion
+system, and the second is a set of vorticity data computed from experimentally obtained
+velocity data from flow past a cylinder at Reynolds number 413.
+
+In both examples, we use the output of Dynamic Mode Decomposition, which has a similar computational cost, as the benchmark for our approach.}}
+@ARTICLE{Luchtenburg_2021,title={Data-driven science and engineering: machine learning, dynamical systems, and control (brunton, steven l. and kutz, j. nathan; 2020) [bookshelf]},year={2021},author={Dirk M. Luchtenburg},doi={10.1109/mcs.2021.3076544},pmid={null},pmcid={null},mag_id={3191865147},journal={IEEE Control Systems Magazine},abstract={This book is an accessible and comprehensive introduction to the field of data-driven science and engineering. It is unique in the sense that it brings together interdisciplinary concepts from machine learning, dynamical systems, and feedback control and applies them to physical systems arising in science and engineering. The book provides a broad overview of these concepts and develops tools for data-driven modeling, prediction, and control. Overall, it provides a perfect starting point for an aspiring graduate student or researcher in this field. It can also be used as a text for an advanced undergraduate or graduate course on data-driven model reduction and control. A wealth of accompanying online material (such as Matlab/Python code and a variety of YouTube video lectures) makes the book very suitable for self-study}}
+@ARTICLE{Turner_2020,title={Machine Learning Algorithms for Improved Thermospheric Density Modeling.},year={2020},author={Herbert Turner and Maggie Zhang and David J. Gondelach and Richard Linares},doi={10.1007/978-3-030-61725-7_18},pmid={null},pmcid={null},mag_id={3094845141},journal={DDDAS},abstract={Accurate estimation and prediction of the thermospheric density is crucial for accurate low Earth orbit prediction. Recently, Reduced-Order Models (ROMs) were developed to obtain accurate quasi-physical dynamic models for the thermospheric density. In this paper we explore the use of deep neural networks and autoencoders to improve the reduced-order models. Through the development of deep and convolutional autoencoders, we obtain improved low-dimension representations of a high-dimensional density state. In addition, we improve the prediction accuracy of the ROM using a deep neural network.}}
+@ARTICLE{Williams_2001,title={Learning with Kernels: Support Vector Machines, Regularization, Optimization, and Beyond},year={2001},author={Christopher K. I. Williams and Christopher K. I. Williams and Christopher Williams},doi={10.1198/jasa.2003.s269},pmid={null},pmcid={null},mag_id={1560724230},journal={null}}
+@ARTICLE{Mollenhauer_2018,title={Singular Value Decomposition of Operators on Reproducing Kernel Hilbert Spaces},year={2018},author={Mattes Mollenhauer and Ingmar Schuster and Ingmar Schuster and Stefan Klus and Christof Schütte},doi={10.1007/978-3-030-51264-4_5},pmid={null},pmcid={null},mag_id={2884133510},journal={arXiv: Functional Analysis},abstract={Reproducing kernel Hilbert spaces (RKHSs) play an important role in many statistics and machine learning applications ranging from support vector machines to Gaussian processes and kernel embeddings of distributions. Operators acting on such spaces are, for instance, required to embed conditional probability distributions in order to implement the kernel Bayes rule and build sequential data models. It was recently shown that transfer operators such as the Perron-Frobenius or Koopman operator can also be approximated in a similar fashion using covariance and cross-covariance operators and that eigenfunctions of these operators can be obtained by solving associated matrix eigenvalue problems. The goal of this paper is to provide a solid functional analytic foundation for the eigenvalue decomposition of RKHS operators and to extend the approach to the singular value decomposition. The results are illustrated with simple guiding examples.}}
+@ARTICLE{Singh_2020,title={Towards a Kernel based Uncertainty Decomposition Framework for Data and Models},year={2020},author={Rishabh Singh and Jose C. Principe},doi={null},pmid={null},pmcid={null},mag_id={3107347510},journal={arXiv: Learning},abstract={This paper introduces a new framework for quantifying predictive uncertainty for both data and models that relies on projecting the data into a Gaussian reproducing kernel Hilbert space (RKHS) and transforming the data probability density function (PDF) in a way that quantifies the flow of its gradient as a topological potential field quantified at all points in the sample space. This enables the decomposition of the PDF gradient flow by formulating it as a moment decomposition problem using operators from quantum physics, specifically the Schrodinger's formulation. We experimentally show that the higher order modes systematically cluster the different tail regions of the PDF, thereby providing unprecedented discriminative resolution of data regions having high epistemic uncertainty. In essence, this approach decomposes local realizations of the data PDF in terms of uncertainty moments. We apply this framework as a surrogate tool for predictive uncertainty quantification of point-prediction neural network models, overcoming various limitations of conventional Bayesian based uncertainty quantification methods. Experimental comparisons with some established methods illustrate performance advantages exhibited by our framework.}}
+@ARTICLE{Schölkopf_1998,title={Kernel PCA pattern reconstruction via approximate pre-images.},year={1998},author={Bernhard Schölkopf and Sebastian Mika and Alexander J. Smola and Gunnar Rätsch and Klaus-Robert Müller},doi={10.1007/978-1-4471-1599-1_18},pmid={null},pmcid={null},mag_id={1500848630},journal={null},abstract={Algorithms based on Mercer kernels construct their solutions in terms of expansions in a high-dimensional feature space F. Previous work has shown that all algorithms which can be formulated in terms of dot products in F can be performed using a kernel without explicitly working in F. The list of such algorithms includes support vector machines and nonlinear kernel principal component extraction. So far, however, it did not include the reconstruction of patterns from their largest nonlinear principal components, a technique which is common practice in linear principal component analysis.}}
+@ARTICLE{Licata_2022,title={Machine‐Learned HASDM Thermospheric Mass Density Model with Uncertainty Quantification},year={2022},author={Richard J. Licata and Piyush M. Mehta and W. K. Tobiska and S. Huzurbazar},doi={10.1029/2021sw002915},pmid={null},pmcid={null},mag_id={4221010190},journal={Space Weather-the International Journal of Research and Applications},abstract={A thermospheric neutral mass density model with robust and reliable uncertainty estimates is developed based on the Space Environment Technologies (SET) High Accuracy Satellite Drag Model (HASDM) density database. This database, created by SET, contains 20 years of outputs from the U.S. Space Force’s HASDM, which currently represents the state-of-the-art for density and drag modeling. We utilize principal component analysis for dimensionality reduction which creates the coefficients upon which nonlinear machine-learned (ML) regression models are trained. These models use three unique loss functions: mean square error (MSE), negative logarithm of predictive density (NLPD), and continuous ranked probability score. Three input sets are also tested, showing improved performance when introducing time histories for geomagnetic indices. These models leverage Monte Carlo dropout to provide uncertainty estimates, and the use of the NLPD loss function results in well-calibrated uncertainty estimates while only increasing error by 0.25% (<10% mean absolute error) relative to MSE. By comparing the best HASDM-ML model to the HASDM database along satellite orbits, we found that the model provides robust and reliable density uncertainties over diverse space weather conditions. A storm-time comparison shows that HASDM-ML also supplies meaningful uncertainty estimates during extreme geomagnetic events.}}
+@ARTICLE{Tobiska_2021,title={The SET HASDM density database},year={2021},author={W. Kent Tobiska and Bruce R. Bowman and S. David Bouwer and Dave Bouwer and Alfredo Cruz and Kaiya Wahl and Marcin Pilinski and Piyush M. Mehta and Richard J. Licata},doi={10.1029/2020sw002682},pmid={null},pmcid={null},mag_id={3135113780},journal={Social Work},abstract={The SET HASDM density database is available for scientific studies through a SQL database with open community access. The information in the SET HASDM density database covers the period from January 1, 2000 through December 31, 2019. Data records exist every 3 h during solar cycles 23 and 24. The database has a grid size of 10° × 15° (latitude, longitude) with 25 km altitude steps between 175 and 825 km. A description of the source of the database, its validation, its information content, and its accessibility are provided.}}
+@ARTICLE{Licata_2020,title={Data-Driven HASDM Density Model using Machine Learning},year={2020},author={Richard J. Licata and Piyush M. Mehta and W. Kent Tobiska},doi={10.1002/essoar.10505213.1},pmid={null},pmcid={null},mag_id={3138371623},journal={null},abstract={Space traffic management is difficult. Monitoring and predicting the accurate, real-time position of satellites for collision avoidance in low earth orbit is an engineering challenge. The dominant ...}}
+@ARTICLE{Amato_2021,title={Deep Learning Method for Martian Atmosphere Reconstruction},year={2021},author={Davide Amato and Jay W. McMahon},doi={10.2514/1.i010922},pmid={null},pmcid={null},mag_id={3197429990},journal={Journal of Aerospace Information Systems},abstract={The reconstruction of atmospheric properties encountered during Mars entry trajectories is a crucial element of postflight mission analysis. This paper proposes a deep learning architecture using a...}}
+
+@ARTICLE{Manzi_SDC,title={AUTOENCODER-BASED THERMOSPHERIC DENSITY MODEL FOR UNCERTAINTY QUANTIFICATION AND REAL-TIME CALIBRATION
+},year={2021},author={Matteo Manzi and Massimiliano Vasile}, journal={8th European Conference on Space Debris}}
+
+@ARTICLE{Vahid_IAC2021,title={AUTOENCODER-BASED THERMOSPHERIC DENSITY ESTIMATION USING GPS TRACKING DATA},year={2021},author={Vahid Nateghi and Matteo Manzi and Massimiliano Vasile}, journal={72nd International Astronautical Congress (IAC)}}
+
+
+@ARTICLE{Licata2020a, title={Physics-informed Machine Learning with Autoencoders and LSTM for Probabilistic Space Weather Modeling and Forecasting}, year={2020}, author={Richard Licata and Pyush Metha}, journal={17th Conference on Space Weather - 100th AMS Annual Meeting}}
+
+@misc{Licata2021,
+  doi = {10.48550/ARXIV.2109.07651},
+  
+  url = {https://arxiv.org/abs/2109.07651},
+  
+  author = {Licata, Richard J. and Mehta, Piyush M. and Tobiska, W. Kent and Huzurbazar, S.},
+  
+  keywords = {Machine Learning (cs.LG), Space Physics (physics.space-ph), FOS: Computer and information sciences, FOS: Computer and information sciences, FOS: Physical sciences, FOS: Physical sciences},
+  
+  title = {Machine-Learned HASDM Model with Uncertainty Quantification},
+  
+  publisher = {arXiv},
+  
+  year = {2021},
+  
+  copyright = {arXiv.org perpetual, non-exclusive license}
+}
+
+
+@article{Licata2022,
+author = {Licata, Richard and Mehta, Piyush and Tobiska, W Kent and Huzurbazar, S.},
+year = {2022},
+month = {04},
+pages = {},
+title = {Machine‐Learned HASDM Thermospheric Mass Density Model With Uncertainty Quantification},
+volume = {20},
+journal = {Space Weather},
+doi = {10.1029/2021SW002915}
+}
+
+@inproceedings{Turner2020,
+author = {Turner, Herbert and Zhang, Maggie and Gondelach, David and Linares, Richard},
+title = {Machine Learning Algorithms for Improved Thermospheric Density Modeling},
+year = {2020},
+isbn = {978-3-030-61724-0},
+publisher = {Springer-Verlag},
+address = {Berlin, Heidelberg},
+url = {https://doi.org/10.1007/978-3-030-61725-7_18},
+doi = {10.1007/978-3-030-61725-7_18},
+booktitle = {Dynamic Data Driven Applications Systems: Third International Conference, DDDAS 2020, Boston, MA, USA, October 2-4, 2020, Proceedings},
+pages = {143–151},
+numpages = {9},
+location = {Boston, MA, USA}
+}
+
+@misc{williams2014,
+  doi = {10.48550/ARXIV.1411.2260},
+  
+  url = {https://arxiv.org/abs/1411.2260},
+  
+  author = {Williams, Matthew O. and Rowley, Clarence W. and Kevrekidis, Ioannis G.},
+  
+  keywords = {Dynamical Systems (math.DS), FOS: Mathematics, FOS: Mathematics},
+  
+  title = {A Kernel-Based Approach to Data-Driven Koopman Spectral Analysis},
+  
+  publisher = {arXiv},
+  
+  year = {2014},
+  
+  copyright = {arXiv.org perpetual, non-exclusive license}
+}
+
+@article{Klus_2019,
+	doi = {10.1007/s00332-019-09574-z},
+  
+	url = {https://doi.org/10.1007%2Fs00332-019-09574-z},
+  
+	year = 2019,
+	month = {aug},
+  
+	publisher = {Springer Science and Business Media {LLC}
+},
+  
+	volume = {30},
+  
+	number = {1},
+  
+	pages = {283--315},
+  
+	author = {Stefan Klus and Ingmar Schuster and Krikamol Muandet},
+  
+	title = {Eigendecompositions of Transfer Operators in Reproducing Kernel Hilbert Spaces},
+  
+	journal = {Journal of Nonlinear Science}
+}
+
+@article{Klus_2020,
+	doi = {10.3390/e22070722},
+  
+	url = {https://doi.org/10.3390%2Fe22070722},
+  
+	year = 2020,
+	month = {jun},
+  
+	publisher = {{MDPI} {AG}
+},
+  
+	volume = {22},
+  
+	number = {7},
+  
+	pages = {722},
+  
+	author = {Stefan Klus and Feliks Nüske and Boumediene Hamzi},
+  
+	title = {Kernel-Based Approximation of the Koopman Generator and Schrödinger Operator},
+  
+	journal = {Entropy}
+}
+@InProceedings{Scholkopf1997,
+author="Sch{\"o}lkopf, Bernhard
+and Smola, Alexander
+and M{\"u}ller, Klaus-Robert",
+editor="Gerstner, Wulfram
+and Germond, Alain
+and Hasler, Martin
+and Nicoud, Jean-Daniel",
+title="Kernel principal component analysis",
+booktitle="Artificial Neural Networks --- ICANN'97",
+year="1997",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="583--588",
+abstract="A new method for performing a nonlinear form of Principal Component Analysis is proposed. By the use of integral operator kernel functions, one can efficiently compute principal components in highdimensional feature spaces, related to input space by some nonlinear map; for instance the space of all possible d-pixel products in images. We give the derivation of the method and present experimental results on polynomial feature extraction for pattern recognition.",
+isbn="978-3-540-69620-9"
+}
+@article{bueso2020,
+  title={Nonlinear PCA for spatio-temporal analysis of Earth observation data},
+  author={Bueso, Diego and Piles, Maria and Camps-Valls, Gustau},
+  journal={IEEE Transactions on Geoscience and Remote Sensing},
+  volume={58},
+  number={8},
+  pages={5752--5763},
+  year={2020},
+  publisher={IEEE}
+}
+@article{bakir2004,
+  title={Learning to find pre-images},
+  author={Bak{\i}r, G{\"o}khan H and Weston, Jason and Sch{\"o}lkopf, Bernhard},
+  journal={Advances in neural information processing systems},
+  volume={16},
+  pages={449--456},
+  year={2004}
+}
+
+@article{Karniadakis,
+author = {Karniadakis, George and Kevrekidis, Yannis and Lu, Lu and Perdikaris, Paris and Wang, Sifan and Yang, Liu},
+year = {2021},
+month = {05},
+pages = {1-19},
+title = {Physics-informed machine learning},
+doi = {10.1038/s42254-021-00314-5}
+}
+@article{mika1998,
+  title={Kernel PCA and de-noising in feature spaces},
+  author={Mika, Sebastian and Sch{\"o}lkopf, Bernhard and Smola, Alex and M{\"u}ller, Klaus-Robert and Scholz, Matthias and R{\"a}tsch, Gunnar},
+  journal={Advances in neural information processing systems},
+  volume={11},
+  year={1998}
+}
+
+@article{Cenedese_2022,
+	doi = {10.1038/s41467-022-28518-y},
+  
+	url = {https://doi.org/10.1038%2Fs41467-022-28518-y},
+  
+	year = 2022,
+	month = {feb},
+  
+	publisher = {Springer Science and Business Media {LLC}
+},
+  
+	volume = {13},
+  
+	number = {1},
+  
+	author = {Mattia Cenedese and Joar Ax{\aa}s and Bastian Bäuerlein and Kerstin Avila and George Haller},
+  
+	title = {Data-driven modeling and prediction of non-linearizable dynamics via spectral submanifolds},
+  
+	journal = {Nature Communications}
+}
+
+@misc{Patterson2021,
+  doi = {10.48550/ARXIV.2104.10350},
+  
+  url = {https://arxiv.org/abs/2104.10350},
+  
+  author = {Patterson, David and Gonzalez, Joseph and Le, Quoc and Liang, Chen and Munguia, Lluis-Miquel and Rothchild, Daniel and So, David and Texier, Maud and Dean, Jeff},
+  
+  keywords = {Machine Learning (cs.LG), Computers and Society (cs.CY), FOS: Computer and information sciences, FOS: Computer and information sciences},
+  
+  title = {Carbon Emissions and Large Neural Network Training},
+  
+  publisher = {arXiv},
+  
+  year = {2021},
+  
+  copyright = {arXiv.org perpetual, non-exclusive license}
+}
+@article{gondelach2020real,
+  title={Real-time thermospheric density estimation via two-line element data assimilation},
+  author={Gondelach, David J and Linares, Richard},
+  journal={Space Weather},
+  volume={18},
+  number={2},
+  pages={e2019SW002356},
+  year={2020},
+  publisher={Wiley Online Library}
+}
+@article{scholkopf1998nonlinear,
+  title={Nonlinear component analysis as a kernel eigenvalue problem},
+  author={Sch{\"o}lkopf, Bernhard and Smola, Alexander and M{\"u}ller, Klaus-Robert},
+  journal={Neural computation},
+  volume={10},
+  number={5},
+  pages={1299--1319},
+  year={1998},
+  publisher={MIT Press}
+}
+@book{Scholkopfbook,
+author = {Sch{\"o}lkopf, Bernhard and Smola, Alexander J.},
+title = {Learning with Kernels: Support Vector Machines, Regularization, Optimization, and Beyond},
+year = {2001},
+isbn = {0262194759},
+publisher = {MIT Press},
+address = {Cambridge, MA, USA},
+abstract = {From the Publisher:In the 1990s, a new type of learning algorithm was developed, based on results from statistical learning theory: the Support Vector Machine (SVM). This gave rise to a new class of theoretically elegant learning machines that use a central concept of SVMs -kernels--for a number of learning tasks. Kernel machines provide a modular framework that can be adapted to different tasks and domains by the choice of the kernel function and the base algorithm. They are replacing neural networks in a variety of fields, including engineering, information retrieval, and bioinformatics. Learning with Kernels provides an introduction to SVMs and related kernel methods. Although the book begins with the basics, it also includes the latest research. It provides all of the concepts necessary to enable a reader equipped with some basic mathematical knowledge to enter the world of machine learning using theoretically well-founded yet easy-to-use kernel algorithms and to understand and apply the powerful algorithms that have been developed over the last few years.}
+}
+@article{kwok2004pre,
+  title={The pre-image problem in kernel methods},
+  author={Kwok, JT-Y and Tsang, IW-H},
+  journal={IEEE transactions on neural networks},
+  volume={15},
+  number={6},
+  pages={1517--1525},
+  year={2004},
+  publisher={IEEE}
+}
+@book{murphy2012machine,
+  title={Machine learning: a probabilistic perspective},
+  author={Murphy, Kevin P},
+  year={2012},
+  publisher={MIT press}
+}
+@misc{brunton2020special,
+  title={Special issue on machine learning and data-driven methods in fluid dynamics},
+  author={Brunton, Steven L and Hemati, Maziar S and Taira, Kunihiko},
+  journal={Theoretical and Computational Fluid Dynamics},
+  volume={34},
+  number={4},
+  pages={333--337},
+  year={2020},
+  publisher={Springer}
+}
+@misc{omalley2019kerastuner,
+	title        = {KerasTuner},
+	author       = {O'Malley, Tom and Bursztein, Elie and Long, James and Chollet, Fran\c{c}ois and Jin, Haifeng and Invernizzi, Luca and others},
+	year         = 2019,
+	howpublished = {\url{https://github.com/keras-team/keras-tuner}}
+}
