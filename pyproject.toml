@@ -16,7 +16,7 @@ homepage = "https://github.com/PoincareTrajectories/td-rom"
 [tool.poetry.dependencies]
 python = "^3.9"
 
-typer = {extras = ["all"], version = "^0.6.1"}
+typer = {extras = ["all"], version = "^0.7.0"}
 rich = "^12.6.0"
 
 [tool.poetry.dev-dependencies]
