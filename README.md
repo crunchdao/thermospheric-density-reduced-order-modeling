@@ -32,7 +32,7 @@ We here focus on non-linear methods, to perform the compression, using Machine L
 Please install [git-lfs](https://git-lfs.github.com/) and use this command to clone our repository:
 
 ```
-git lfs clone https://github.com/matteoettam09/ThermosphericDensity-ReducedOrderModeling.git
+git lfs clone https://github.com/crunchdao/thermospheric-density-reduced-order-modeling.git
 ```
 
 ## Installation
