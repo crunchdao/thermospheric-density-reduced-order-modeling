@@ -1,4 +1,4 @@
-# ThermosphericDensity-ReducedOrderModeling
+# Thermospheric Density Reduced Order Modeling
 
 <div align="center">
 
