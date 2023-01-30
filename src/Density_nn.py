@@ -10,7 +10,7 @@ import tensorflow as tf
 from scipy import fftpack, linalg
 from scipy.integrate import odeint
 from scipy.special import legendre
-from sklearn.preprocessing import Normalizer, StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from tensorflow import keras
 from tensorflow.keras import layers, losses
 from tensorflow.keras.models import Model
@@ -70,8 +70,9 @@ for year in years:
 
     rho_zeros_shuffled = np.copy(rho_zeros)
     np.random.shuffle(rho_zeros_shuffled)
+
     training_data = rho_zeros_shuffled[:2000]
-    validation_data = rho_zeros_shuffled[2000:]
+    validation_data_ = rho_zeros_shuffled[2000:]
 
     training_data_resh = np.reshape(training_data, newshape=(2000, 20 * 24 * 4))
 
@@ -80,13 +81,27 @@ for year in years:
     #     validation_data, newshape=(nPoints_val, 20 * 24 * 4))
 
     nPoints_val = 920
-    validation_data_resh = np.reshape(validation_data, newshape=(nPoints_val, 20 * 24 * 4))
+    validation_data_resh = np.reshape(validation_data_, newshape=(nPoints_val, 20 * 24 * 4))
+    
+    normalization_method = 'standardscaler' # minmax, standardscaler 
 
-    # normalizer = Normalizer()
-    normalizer = StandardScaler()
-
-    training_data_resh_norm = normalizer.fit_transform(training_data_resh)
-    validation_data_resh_norm = normalizer.transform(validation_data_resh)
+    if normalization_method == 'minmax':
+        # training_data_resh_norm = [(training_data_resh[:,i]- np.min(training_data_resh[:,i]))/(np.max(training_data_resh[:,i])-np.min(training_data_resh[:,i])) for i in range(training_data_resh.shape[1])]
+        # validation_data_resh_norm = [(validation_data_resh[:,i]- np.min(training_data_resh[:,i]))/(np.max(training_data_resh[:,i])-np.min(training_data_resh[:,i])) for i in range(validation_data_resh.shape[1])]
+        normalizer = MinMaxScaler()
+        training_data_resh_norm = normalizer.fit_transform(training_data_resh)
+        validation_data_resh_norm = normalizer.transform(validation_data_resh)
+    elif normalization_method == 'standardscaler':
+        normalizer = StandardScaler()
+        training_data_resh_norm = normalizer.fit_transform(training_data_resh)
+        validation_data_resh_norm = normalizer.transform(validation_data_resh)
+    print(training_data_resh[10,:3])
+    print(validation_data_resh[10,:3])
+    print(training_data_resh_norm[10,:3])
+    print(validation_data_resh_norm[10,:3])
+    # exit()
+    # elif normalization_method == 'standardscaler':
+    # exit()
     # print(np.max(training_data))
     # print(np.min(training_data))
     # exit()
@@ -195,7 +210,7 @@ for year in years:
             training_data_resh_norm,
             training_data_resh_norm,
             batch_size=5,
-            epochs=3,
+            epochs=50,
             shuffle=True,
             validation_data=(validation_data_resh_norm, validation_data_resh_norm),
         )
@@ -238,10 +253,13 @@ for year in years:
         plt.tight_layout()
         plt.savefig(f"output/loss_atm_{year}.png")
     error = decoded - validation_data_resh_norm
-    error_original  = normalizer.inverse_transform(error)
-    decoded_original = normalizer.inverse_transform(decoded)
+    if normalization_method == 'minmax':
+        error_original  = normalizer.inverse_transform(error)
+        decoded_original = normalizer.inverse_transform(decoded)
+    elif normalization_method == 'standardscaler':
+        error_original  = normalizer.inverse_transform(error)
+        decoded_original = normalizer.inverse_transform(decoded)
     error_original_resh = np.reshape(error_original, newshape=(nPoints_val, 20, 24, 4))
-    # _validation_data = np.reshape(validation_data_resh, newshape=(nPoints_val, 20, 24, 4))
 
     plt.figure()
     plt.rcParams.update({"font.size": 14})
@@ -251,7 +269,7 @@ for year in years:
     plt.contourf(
         np.rad2deg(phi),
         np.rad2deg(t),
-        np.absolute(error_original_resh[7, :19, :, 0]) / validation_data[7, :19, :, 0] * 100,
+        np.absolute(error_original_resh[7, :19, :, 0]) / validation_data_[7, :19, :, 0] * 100,
         cmap="inferno",
         levels=900,
     )
@@ -261,7 +279,9 @@ for year in years:
     plt.savefig(f"output/ReconstructionError_nn_{year}.png")
     error_norm_nn = linalg.norm(decoded - validation_data_resh_norm)
     error_original_nn = linalg.norm(decoded_original - validation_data_resh)
-    
-
+    # print(decoded[10,:3])
+    # print(decoded_original[10,:3])
+    # print(validation_data_resh_norm[10,:3])
+    # print(validation_data_resh[10,:3])
     print("error_norm_nn:", error_norm_nn)
     print("error_original_nn:", error_original_nn)
