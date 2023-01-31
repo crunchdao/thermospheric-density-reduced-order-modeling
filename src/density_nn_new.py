@@ -10,13 +10,18 @@ import tensorflow as tf
 from scipy import fftpack, linalg
 from scipy.integrate import odeint
 from scipy.special import legendre
-from sklearn.preprocessing import Normalizer, StandardScaler
+from sklearn.preprocessing import Normalizer, StandardScaler, MinMaxScaler
 from tensorflow import keras
 from tensorflow.keras import layers, losses
 from tensorflow.keras.models import Model
 
 # from pyJoules.energy_meter import measure_energy
-# X = np.array([[1,2,3],[4,5,6],[7,8,9]])
+# X = np.array([[1,2,3],[1,2,3]])
+# # # a = np.all(X)
+# print(np.size(X))
+# exit()
+
+# exit()
 # np.random.shuffle(X)
 # print(X)
 # exit()
@@ -31,7 +36,7 @@ from tensorflow.keras.models import Model
 mpl.use("Agg")
 
 # years = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"]
-years = ["2013", "2014"] # 
+years = ["2013" ] # , "2014" 
 rho_list1 = []
 
 for year in years:
@@ -63,21 +68,34 @@ for year in years:
 
 rho = np.array(rho_list1)
 
-rho_zeros = np.zeros((2920 * len(years), 20, 24, 4))
+rho_zeros = np.zeros((2920 * len(years), nt, nphi, 4))
 rho_zeros[:, :nt, :nphi, :] = rho
 del rho_list1, rho
 
 rho_zeros_shuffled = np.copy(rho_zeros)
 np.random.shuffle(rho_zeros_shuffled)
+# print(rho_zeros_shuffled.shape)
+# rho_zeros_shuffled_aux = np.copy(rho_zeros_shuffled)
+# index = []
+# for j in range(rho_zeros_shuffled.shape[0]):
+#     if np.all(rho_zeros_shuffled[j]):
+#         pass
+#     else:
 
-
+#         print(rho_zeros_shuffled[j, -1,-1,0])
+#         # print(j)
+#         index.append(j)
+# rho_zeros_shuffled_aux = np.delete(rho_zeros_shuffled,index,0)
+# print(rho_zeros_shuffled_aux.shape)
+# print(np.min(rho_zeros_shuffled_aux))
+# exit()
 class Autoencoder(Model):
         def __init__(self):
             super().__init__()
             self.encoder = tf.keras.Sequential(
                 [
                     layers.Flatten(),
-                    layers.Dense(20 * 24 * 4, activation="relu"),
+                    layers.Dense(nt * 24 * 4, activation="relu"),
                     layers.Dense(1024, activation="relu"),
                     layers.Dense(512, activation="relu"),
                     layers.Dense(256, activation="relu"),
@@ -90,7 +108,7 @@ class Autoencoder(Model):
                     layers.Dense(256, activation="relu"),
                     layers.Dense(512, activation="relu"),
                     layers.Dense(1024, activation="relu"),
-                    layers.Dense(20 * 24 * 4, activation="relu"),
+                    layers.Dense(nt * 24 * 4, activation="relu"),
                 ]
             )
 
@@ -104,24 +122,41 @@ nPoints_tra = rho_zeros_shuffled.shape[0] - nPoints_val
 
 error_cv_norm = 0
 error_cv_orig = 0
-cv_size = 4
-
+error_cv_norm_mse = 0
+error_cv_orig_mse = 0
+error_cv_original_perc = 0
+cv_size = 5
 for i in range(cv_size):
     validation_data = rho_zeros_shuffled[i * nPoints_val: (i+1) *nPoints_val]  
     training_data = np.delete(rho_zeros_shuffled,np.arange(i * nPoints_val, (i+1) *nPoints_val).tolist(),0)
 
-    training_data = rho_zeros_shuffled[nPoints_val:]
+    training_data_resh = np.reshape(training_data, newshape=(nPoints_tra, nt * 24 * 4))
+    validation_data_resh = np.reshape(validation_data, newshape=(nPoints_val, nt * 24 * 4))
+            
+    normalization_method = 'minmax' # minmax, standardscaler 
 
-    training_data_resh = np.reshape(training_data, newshape=(nPoints_tra, 20 * 24 * 4))
-    validation_data_resh = np.reshape(validation_data, newshape=(nPoints_val, 20 * 24 * 4))
+    if normalization_method == 'minmax':
+        normalizer = MinMaxScaler()
+        training_data_resh_norm = normalizer.fit_transform(training_data_resh)
+        validation_data_resh_norm = normalizer.transform(validation_data_resh)
+    elif normalization_method == 'standardscaler':
+        normalizer = StandardScaler()
+        training_data_resh_norm = normalizer.fit_transform(training_data_resh)
+        validation_data_resh_norm = normalizer.transform(validation_data_resh)
 
-    # normalizer = Normalizer()
-    normalizer = StandardScaler()
+    # normalizer = StandardScaler()
 
-    training_data_resh_norm = normalizer.fit_transform(training_data_resh)
-    validation_data_resh_norm = normalizer.transform(validation_data_resh)
+    # training_data_resh_norm = normalizer.fit_transform(training_data_resh)
+    # validation_data_resh_norm = normalizer.transform(validation_data_resh)
     # print(np.max(training_data))
     # print(np.min(training_data))
+    # print(np.max(validation_data))
+    # print(np.min(validation_data))
+    # print(np.max(training_data_resh_norm))
+    # print(np.min(training_data_resh_norm))
+    # print(np.max(validation_data_resh_norm))
+    # print(np.min(validation_data_resh_norm))
+    
     # exit()
     # rhoavg = np.mean(validation_data_resh, axis=0)  # Compute mean
     # rho_msub_val = (
@@ -244,9 +279,13 @@ for i in range(cv_size):
         plt.tight_layout()
         plt.savefig(f"output/loss_atm_cv{i}.png")
     error = decoded - validation_data_resh_norm
-    error_original  = normalizer.inverse_transform(error)
-    decoded_original = normalizer.inverse_transform(decoded)
-    error_original_resh = np.reshape(error_original, newshape=(nPoints_val, 20, 24, 4))
+    if normalization_method == 'minmax':
+        error_original  = normalizer.inverse_transform(error)
+        decoded_original = normalizer.inverse_transform(decoded)
+    elif normalization_method == 'standardscaler':
+        error_original  = normalizer.inverse_transform(error)
+        decoded_original = normalizer.inverse_transform(decoded)
+    error_original_resh = np.reshape(error_original, newshape=(nPoints_val, nt, 24, 4))
 
     plt.figure()
     plt.rcParams.update({"font.size": 14})
@@ -264,13 +303,34 @@ for i in range(cv_size):
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(f"output/ReconstructionError_nn_cv{i}.png")
+
     error_norm_nn = linalg.norm(decoded - validation_data_resh_norm)
     error_original_nn = linalg.norm(decoded_original - validation_data_resh)
+    error_norm_nn_mse = linalg.norm(decoded - validation_data_resh_norm)**2 / decoded.shape[0]
+    error_original_nn_mse = linalg.norm(decoded_original - validation_data_resh)**2 / decoded.shape[0]
     error_cv_norm += error_norm_nn
     error_cv_orig += error_original_nn
+    error_cv_norm_mse += error_norm_nn_mse
+    error_cv_orig_mse += error_original_nn_mse
+
+    error_original_perc = np.sum(error_original / validation_data_resh * 100) / np.size(validation_data_resh)
+    error_cv_original_perc += error_original_perc
 
     print("error_norm_nn:", error_norm_nn)
     print("error_original_nn:", error_original_nn)
+    print("error_norm_nn:", error_norm_nn_mse)
+    print("error_original_nn:", error_original_nn_mse)
+    print("Mean percentage error:", error_original_perc)
 
 print("error_norm_cv:", error_cv_norm / cv_size)
-print("error_original_cv:", error_original_nn / cv_size)
+print("error_original_cv:", error_cv_orig / cv_size)
+print("error_norm_cv:", error_cv_norm_mse / cv_size)
+print("error_original_cv:", error_cv_orig_mse / cv_size)
+print("Mean percentage error:", error_cv_original_perc / cv_size)
+final_error = [error_cv_original_perc/ cv_size, error_cv_norm / cv_size, error_cv_orig / cv_size, error_cv_norm_mse / cv_size, error_cv_orig_mse / cv_size]
+path1 = f"./output/"
+isExist = os.path.exists(path1)
+if not isExist:
+    os.makedirs(path1)
+
+np.savetxt(f"output/error.txt", final_error, delimiter=",")
