@@ -300,3 +300,10 @@ for year in years:
     print("error_norm_nn_mse:", error_norm_nn_mse)
     print("error_original_nn_mse:", error_original_nn_mse)
     print("Mean percentage error:", error_original_perc)
+final_error = [error_original_perc, error_norm_nn, error_original_nn, error_norm_nn_mse, error_original_nn_mse]
+path1 = f"./output/"
+isExist = os.path.exists(path1)
+if not isExist:
+    os.makedirs(path1)
+
+np.savetxt(f"output/error_hd.txt", final_error, delimiter=",")
