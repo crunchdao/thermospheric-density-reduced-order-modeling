@@ -21,6 +21,8 @@ Python package for `Thermospheric Density Reduced Order Modeling`.
 
 This code has been developed by Vahid Nateghi and Matteo Manzi. It is associated with the paper submitted to *"Advances in Space Research"*, whose preprint is available [here](https://www.researchgate.net/publication/363573709_Machine_Learning_Methods_for_Nonlinear_Reduced-order_Modeling_of_the_Thermospheric_Density_Field).
 
+The SET HASDM density data are provided for scientific use courtesy of Space Environment Technologies.
+
 This project was generated with [`python-package-template`](https://github.com/TezRomacH/python-package-template)
 
 ## Description
