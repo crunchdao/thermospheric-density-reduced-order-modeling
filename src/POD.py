@@ -35,7 +35,6 @@ rho_list1 = []
 rho_list2 = []
 
 for i in range(int(1331520 / (nt * nphi))):  # 1335168
-
     rho_500_i = density_np_500_2013[i * (4 * nt * nphi) : (i + 1) * (4 * nt * nphi), -1]
     rho_polar_500_i_2013 = np.reshape(rho_500_i, (nt, nphi, 4))
 
