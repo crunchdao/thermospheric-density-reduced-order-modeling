@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-import keras_tuner
+# import keras_tuner
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,36 +10,45 @@ import tensorflow as tf
 from scipy import fftpack, linalg
 from scipy.integrate import odeint
 from scipy.special import legendre
-from sklearn.preprocessing import normalize
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from tensorflow import keras
 from tensorflow.keras import layers, losses
 from tensorflow.keras.models import Model
 
 # from pyJoules.energy_meter import measure_energy
-
-
+# X = np.array([[1,2,3],[4,5,6],[7,8,9]])
+# np.random.shuffle(X)
+# print(X)
+# exit()
+# normalizer = Normalizer(norm='max')
+# print(np.std(X))
+# print(np.mean(X))
+# asd = (X - np.mean(X))/ np.std(X)
+# X1 = normalizer.fit_transform(X)
+# print(X1)
+# print(asd)
+# exit()
 mpl.use("Agg")
 
-years = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"]
+# years = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"]
 years = ["2013"]
 for year in years:
     print(year)
-    density_df = pd.read_csv(
-        f"./Data/{year}_HASDM_500-575KM.txt", delim_whitespace=True, header=None
-    )
+    density_df = pd.read_csv(f"../Data/{year}_HASDM_500-575KM.txt", delim_whitespace=True, header=None)
 
     density_np = pd.DataFrame.to_numpy(density_df)
 
-    del density_df
+    del density_df 
 
     nt = 19
     nphi = 24
-
+    alt = 4
     t = np.linspace(-np.pi / 2, np.pi / 2, nt)
     phi = np.linspace(0, np.deg2rad(345), nphi)
-
-    max_rho = np.max(density_np[:, -1])
-    density_np[:, -1] = density_np[:, -1] / max_rho
+    # print(density_np.shape)
+    # exit()
+    # max_rho = np.max(density_np[:, -1])
+    # density_np[:, -1] = density_np[:, -1] / max_rho
 
     rho_list = []
     rho_list1 = []
@@ -47,39 +56,69 @@ for year in years:
 
     for i in range(int(1331520 / (nt * nphi))):
         rho_i = density_np[i * (4 * nt * nphi) : (i + 1) * (4 * nt * nphi), -1]
+        
         rho_polar_i = np.reshape(rho_i, (nt, nphi, 4))
 
         rho_list1.append(rho_polar_i)
 
+
     rho = np.array(rho_list1)
 
-    rho_zeros = np.zeros((2920, 20, 24, 4))
-    rho_zeros[:, :nt, :nphi, :] = rho
+    rho_zeros = rho
+
     del rho_list1, rho
 
-    training_data = rho_zeros[:2000]
-    validation_data = rho_zeros[2000:]
+    rho_zeros_shuffled = np.copy(rho_zeros)
+    np.random.shuffle(rho_zeros_shuffled)
 
-    training_data_resh = np.reshape(training_data, newshape=(2000, 20 * 24 * 4))
-    nPoints_val = len(rho_zeros) - len(training_data)
-    validation_data_resh = np.reshape(
-        validation_data, newshape=(nPoints_val, 20 * 24 * 4)
-    )
+    nPoints_val = int(0.2 * rho_zeros_shuffled.shape[0])
+    nPoints_tra = rho_zeros_shuffled.shape[0] - nPoints_val
 
-    nPoints_val = 920
-    validation_data_resh = np.reshape(
-        validation_data, newshape=(nPoints_val, 20 * 24 * 4)
-    )
-    rhoavg = np.mean(validation_data_resh, axis=0)  # Compute mean
-    rho_msub_val = (
-        validation_data_resh.T - np.tile(rhoavg, (nPoints_val, 1)).T
-    )  # Mean-subtracted data
+    training_data = rho_zeros_shuffled[nPoints_val:]
+    validation_data_ = rho_zeros_shuffled[:nPoints_val]
 
-    rhoavg = np.mean(training_data_resh, axis=0)  # Compute mean
-    nPoints = 2000
-    rho_msub = (
-        training_data_resh.T - np.tile(rhoavg, (nPoints, 1)).T
-    )  # Mean-subtracted data
+    training_data_resh = np.reshape(training_data, newshape=(nPoints_tra, nt * nphi * alt))
+
+    # nPoints_val = len(rho_zeros) - len(training_data)
+    # validation_data_resh = np.reshape(
+    #     validation_data, newshape=(nPoints_val, 20 * 24 * 4))
+
+    # nPoints_val = 920
+
+    validation_data_resh = np.reshape(validation_data_, newshape=(nPoints_val, nt * nphi * alt))
+    
+    normalization_method = 'minmax' # minmax, standardscaler 
+
+    if normalization_method == 'minmax':
+        # training_data_resh_norm = [(training_data_resh[:,i]- np.min(training_data_resh[:,i]))/(np.max(training_data_resh[:,i])-np.min(training_data_resh[:,i])) for i in range(training_data_resh.shape[1])]
+        # validation_data_resh_norm = [(validation_data_resh[:,i]- np.min(training_data_resh[:,i]))/(np.max(training_data_resh[:,i])-np.min(training_data_resh[:,i])) for i in range(validation_data_resh.shape[1])]
+        normalizer = MinMaxScaler()
+        training_data_resh_norm = normalizer.fit_transform(training_data_resh)
+        validation_data_resh_norm = normalizer.transform(validation_data_resh)
+    elif normalization_method == 'standardscaler':
+        normalizer = StandardScaler()
+        training_data_resh_norm = normalizer.fit_transform(training_data_resh)
+        validation_data_resh_norm = normalizer.transform(validation_data_resh)
+    # print(training_data_resh[10,:3])
+    # print(validation_data_resh[10,:3])
+    # print(training_data_resh_norm[10,:3])
+    # print(validation_data_resh_norm[10,:3])
+    # exit()
+    # elif normalization_method == 'standardscaler':
+    # exit()
+    # print(np.max(training_data))
+    # print(np.min(training_data))
+    # exit()
+    # rhoavg = np.mean(validation_data_resh, axis=0)  # Compute mean
+    # rho_msub_val = (
+    #     validation_data_resh.T - np.tile(rhoavg, (nPoints_val, 1)).T
+    # )  # Mean-subtracted data
+
+    # rhoavg = np.mean(training_data_resh, axis=0)  # Compute mean
+    # nPoints = 2000
+    # rho_msub = (
+    #     training_data_resh.T - np.tile(rhoavg, (nPoints, 1)).T
+    # )  # Mean-subtracted data
 
     # def build_model(hp):
     #     bottle = hp.Int("bottle", min_value=5, max_value=10)
@@ -144,7 +183,7 @@ for year in years:
             self.encoder = tf.keras.Sequential(
                 [
                     layers.Flatten(),
-                    layers.Dense(20 * 24 * 4, activation="relu"),
+                    layers.Dense(nt * nphi * alt, activation="relu"),
                     layers.Dense(1024, activation="relu"),
                     layers.Dense(512, activation="relu"),
                     layers.Dense(256, activation="relu"),
@@ -157,7 +196,7 @@ for year in years:
                     layers.Dense(256, activation="relu"),
                     layers.Dense(512, activation="relu"),
                     layers.Dense(1024, activation="relu"),
-                    layers.Dense(20 * 24 * 4, activation="relu"),
+                    layers.Dense(nt * nphi * alt, activation="relu"),
                 ]
             )
 
@@ -172,18 +211,18 @@ for year in years:
         autoencoder.compile(optimizer="adam", loss=losses.MeanSquaredError())
 
         history = autoencoder.fit(
-            training_data_resh,
-            training_data_resh,
+            training_data_resh_norm,
+            training_data_resh_norm,
             batch_size=5,
             epochs=200,
             shuffle=True,
-            validation_data=(validation_data_resh, validation_data_resh),
+            validation_data=(validation_data_resh_norm, validation_data_resh_norm),
         )
 
         loss = list(history.history.values())
         autoencoder.encoder.save("encoder")
         autoencoder.decoder.save("decoder")
-        encoded = autoencoder.encoder(validation_data_resh).numpy()
+        encoded = autoencoder.encoder(validation_data_resh_norm).numpy()
         decoded = autoencoder.decoder(encoded).numpy()
     else:
         encoder = tf.keras.models.load_model("encoder")
@@ -217,8 +256,15 @@ for year in years:
         plt.grid(True)
         plt.tight_layout()
         plt.savefig(f"output/loss_atm_{year}.png")
-    error = decoded - validation_data_resh
-    error = np.reshape(error, newshape=(nPoints_val, 20, 24, 4))
+    error = decoded - validation_data_resh_norm
+    if normalization_method == 'minmax':
+        error_original  = normalizer.inverse_transform(error)
+        decoded_original = normalizer.inverse_transform(decoded)
+    elif normalization_method == 'standardscaler':
+        error_original  = normalizer.inverse_transform(error)
+        decoded_original = normalizer.inverse_transform(decoded)
+    error_original_resh = np.reshape(error_original, newshape=(nPoints_val, nt, nphi, alt))
+
     plt.figure()
     plt.rcParams.update({"font.size": 14})
     mpl.rcParams["legend.fontsize"] = 15
@@ -227,7 +273,7 @@ for year in years:
     plt.contourf(
         np.rad2deg(phi),
         np.rad2deg(t),
-        np.absolute(error[7, :19, :, 0]) / validation_data[7, :19, :, 0] * 100,
+        np.absolute(error_original_resh[7, :19, :, 0]) / validation_data_[7, :19, :, 0] * 100,
         cmap="inferno",
         levels=900,
     )
@@ -235,5 +281,21 @@ for year in years:
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(f"output/ReconstructionError_nn_{year}.png")
-    error_norm_nn = linalg.norm(decoded - validation_data_resh)
+    error_norm_nn = linalg.norm(decoded - validation_data_resh_norm)
+    error_original_nn = linalg.norm(decoded_original - validation_data_resh)
+    error_norm_nn_mse = linalg.norm(decoded - validation_data_resh_norm)**2 / decoded.shape[0]
+    error_original_nn_mse = linalg.norm(decoded_original - validation_data_resh)**2 / decoded.shape[0]
+    error_original_perc = np.sum(error_original / validation_data_resh * 100) / np.size(validation_data_resh)
+
     print("error_norm_nn:", error_norm_nn)
+    print("error_original_nn:", error_original_nn)
+    print("error_norm_nn:", error_norm_nn_mse)
+    print("error_original_nn:", error_original_nn_mse)
+    print("Mean percentage error:", error_original_perc)
+final_error = [error_original_perc, error_norm_nn, error_original_nn, error_norm_nn_mse, error_original_nn_mse]
+path1 = f"./output/"
+isExist = os.path.exists(path1)
+if not isExist:
+    os.makedirs(path1)
+
+np.savetxt(f"output/error_ld.txt", final_error, delimiter=",")
