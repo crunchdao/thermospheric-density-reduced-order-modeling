@@ -17,6 +17,14 @@ Python package for `Thermospheric Density Reduced Order Modeling`.
 
 </div>
 
+## Credits [![🚀 Your next Python package needs a bleeding-edge project structure.](https://img.shields.io/badge/python--package--template-%F0%9F%9A%80-brightgreen)](https://github.com/TezRomacH/python-package-template)
+
+This code has been developed by Vahid Nateghi and Matteo Manzi. It is associated with the paper submitted to *"Advances in Space Research"*, whose preprint is available [here](https://www.researchgate.net/publication/363573709_Machine_Learning_Methods_for_Nonlinear_Reduced-order_Modeling_of_the_Thermospheric_Density_Field).
+
+The SET HASDM density data are provided for scientific use courtesy of Space Environment Technologies.
+
+This project was generated with [`python-package-template`](https://github.com/TezRomacH/python-package-template)
+
 ## Description
 
 In the context of the commercial activities performed in Low-Earth Orbit, a region of space of a few hundred kilometers of altitude, because the space traffic is increasing, it is important for us to obtain a model of the density field of the atmosphere, as the motion of the satellites in this orbital regime is strongly influenced by atmospheric drag, which is a function of the atmospheric density. 
@@ -127,8 +135,3 @@ make cleanup
 - [SSMLearn](https://github.com/haller-group/SSMLearn)
 - [Codpy](https://github.com/JohnLeM/codpy_alpha)
 - [libROM](https://github.com/LLNL/libROM)
-
-
-## Credits [![🚀 Your next Python package needs a bleeding-edge project structure.](https://img.shields.io/badge/python--package--template-%F0%9F%9A%80-brightgreen)](https://github.com/TezRomacH/python-package-template)
-
-This project was generated with [`python-package-template`](https://github.com/TezRomacH/python-package-template)
