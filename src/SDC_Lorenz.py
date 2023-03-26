@@ -139,7 +139,6 @@ def generate_lorenz_data(
 
 
 def main():
-
     if plot == 0:
         # generate training, validation, testing data
         noise_strength = 0.0  # 1e-6

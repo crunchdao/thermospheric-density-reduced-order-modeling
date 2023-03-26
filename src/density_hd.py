@@ -10,7 +10,7 @@ import tensorflow as tf
 from scipy import fftpack, linalg
 from scipy.integrate import odeint
 from scipy.special import legendre
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from tensorflow import keras
 from tensorflow.keras import layers, losses
 from tensorflow.keras.models import Model
@@ -34,13 +34,17 @@ mpl.use("Agg")
 years = ["2013"]
 for year in years:
     print(year)
-    density_df = pd.read_csv(f"../Data/{year}_HASDM_500-575KM.txt", delim_whitespace=True, header=None)
-    density_df1 = pd.read_csv(f"../Data/{year}_HASDM_400-475KM.txt", delim_whitespace=True, header=None)
+    density_df = pd.read_csv(
+        f"../Data/{year}_HASDM_500-575KM.txt", delim_whitespace=True, header=None
+    )
+    density_df1 = pd.read_csv(
+        f"../Data/{year}_HASDM_400-475KM.txt", delim_whitespace=True, header=None
+    )
 
     density_np = pd.DataFrame.to_numpy(density_df)
     density_np1 = pd.DataFrame.to_numpy(density_df)
 
-    del density_df, density_df1 
+    del density_df, density_df1
 
     nt = 19
     nphi = 24
@@ -59,13 +63,12 @@ for year in years:
     for i in range(int(1331520 / (nt * nphi))):
         rho_i = density_np[i * (4 * nt * nphi) : (i + 1) * (4 * nt * nphi), -1]
         rho_i1 = density_np1[i * (4 * nt * nphi) : (i + 1) * (4 * nt * nphi), -1]
-        
+
         rho_polar_i = np.reshape(rho_i, (nt, nphi, 4))
         rho_polar_i1 = np.reshape(rho_i1, (nt, nphi, 4))
 
         rho_list1.append(rho_polar_i)
         rho_list2.append(rho_polar_i1)
-
 
     rho = np.array(rho_list1)
     rho1 = np.array(rho_list2)
@@ -85,7 +88,9 @@ for year in years:
     training_data = rho_zeros_shuffled[nPoints_val:]
     validation_data_ = rho_zeros_shuffled[:nPoints_val]
 
-    training_data_resh = np.reshape(training_data, newshape=(nPoints_tra, nt * nphi * alt))
+    training_data_resh = np.reshape(
+        training_data, newshape=(nPoints_tra, nt * nphi * alt)
+    )
 
     # nPoints_val = len(rho_zeros) - len(training_data)
     # validation_data_resh = np.reshape(
@@ -93,17 +98,19 @@ for year in years:
 
     # nPoints_val = 920
 
-    validation_data_resh = np.reshape(validation_data_, newshape=(nPoints_val, nt * nphi * alt))
-    
-    normalization_method = 'minmax' # minmax, standardscaler 
+    validation_data_resh = np.reshape(
+        validation_data_, newshape=(nPoints_val, nt * nphi * alt)
+    )
 
-    if normalization_method == 'minmax':
+    normalization_method = "minmax"  # minmax, standardscaler
+
+    if normalization_method == "minmax":
         # training_data_resh_norm = [(training_data_resh[:,i]- np.min(training_data_resh[:,i]))/(np.max(training_data_resh[:,i])-np.min(training_data_resh[:,i])) for i in range(training_data_resh.shape[1])]
         # validation_data_resh_norm = [(validation_data_resh[:,i]- np.min(training_data_resh[:,i]))/(np.max(training_data_resh[:,i])-np.min(training_data_resh[:,i])) for i in range(validation_data_resh.shape[1])]
         normalizer = MinMaxScaler()
         training_data_resh_norm = normalizer.fit_transform(training_data_resh)
         validation_data_resh_norm = normalizer.transform(validation_data_resh)
-    elif normalization_method == 'standardscaler':
+    elif normalization_method == "standardscaler":
         normalizer = StandardScaler()
         training_data_resh_norm = normalizer.fit_transform(training_data_resh)
         validation_data_resh_norm = normalizer.transform(validation_data_resh)
@@ -265,13 +272,15 @@ for year in years:
         plt.tight_layout()
         plt.savefig(f"output/loss_atm_{year}.png")
     error = decoded - validation_data_resh_norm
-    if normalization_method == 'minmax':
-        error_original  = normalizer.inverse_transform(error)
+    if normalization_method == "minmax":
+        error_original = normalizer.inverse_transform(error)
         decoded_original = normalizer.inverse_transform(decoded)
-    elif normalization_method == 'standardscaler':
-        error_original  = normalizer.inverse_transform(error)
+    elif normalization_method == "standardscaler":
+        error_original = normalizer.inverse_transform(error)
         decoded_original = normalizer.inverse_transform(decoded)
-    error_original_resh = np.reshape(error_original, newshape=(nPoints_val, nt, nphi, alt))
+    error_original_resh = np.reshape(
+        error_original, newshape=(nPoints_val, nt, nphi, alt)
+    )
 
     plt.figure()
     plt.rcParams.update({"font.size": 14})
@@ -281,7 +290,9 @@ for year in years:
     plt.contourf(
         np.rad2deg(phi),
         np.rad2deg(t),
-        np.absolute(error_original_resh[7, :19, :, 0]) / validation_data_[7, :19, :, 0] * 100,
+        np.absolute(error_original_resh[7, :19, :, 0])
+        / validation_data_[7, :19, :, 0]
+        * 100,
         cmap="inferno",
         levels=900,
     )
@@ -291,16 +302,28 @@ for year in years:
     plt.savefig(f"output/ReconstructionError_nn_{year}.png")
     error_norm_nn = linalg.norm(decoded - validation_data_resh_norm)
     error_original_nn = linalg.norm(decoded_original - validation_data_resh)
-    error_norm_nn_mse = linalg.norm(decoded - validation_data_resh_norm)**2 / decoded.shape[0]
-    error_original_nn_mse = linalg.norm(decoded_original - validation_data_resh)**2 / decoded.shape[0]
-    error_original_perc = np.sum(error_original / validation_data_resh * 100) / np.size(validation_data_resh)
+    error_norm_nn_mse = (
+        linalg.norm(decoded - validation_data_resh_norm) ** 2 / decoded.shape[0]
+    )
+    error_original_nn_mse = (
+        linalg.norm(decoded_original - validation_data_resh) ** 2 / decoded.shape[0]
+    )
+    error_original_perc = np.sum(error_original / validation_data_resh * 100) / np.size(
+        validation_data_resh
+    )
 
     print("error_norm_nn:", error_norm_nn)
     print("error_original_nn:", error_original_nn)
     print("error_norm_nn_mse:", error_norm_nn_mse)
     print("error_original_nn_mse:", error_original_nn_mse)
     print("Mean percentage error:", error_original_perc)
-final_error = [error_original_perc, error_norm_nn, error_original_nn, error_norm_nn_mse, error_original_nn_mse]
+final_error = [
+    error_original_perc,
+    error_norm_nn,
+    error_original_nn,
+    error_norm_nn_mse,
+    error_original_nn_mse,
+]
 path1 = f"./output/"
 isExist = os.path.exists(path1)
 if not isExist:
