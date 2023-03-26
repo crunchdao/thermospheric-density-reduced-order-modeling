@@ -210,19 +210,24 @@ for year in years:
             decoded = self.decoder(encoded)
             return decoded
 
-    run = True
+    run = False
     if run:
         autoencoder = Autoencoder()
         autoencoder.compile(optimizer="adam", loss=losses.MeanSquaredError())
 
-        history = autoencoder.fit(
-            training_data_resh_norm,
-            training_data_resh_norm,
-            batch_size=5,
-            epochs=200,
-            shuffle=True,
-            validation_data=(validation_data_resh_norm, validation_data_resh_norm),
-        )
+        @measure_energy
+        def train_script():
+            history = autoencoder.fit(
+                training_data_resh_norm,
+                training_data_resh_norm,
+                batch_size=5,
+                epochs=20,  # 200
+                shuffle=True,
+                validation_data=(validation_data_resh_norm, validation_data_resh_norm),
+            )
+            return history
+
+        history = train_script()
 
         loss = list(history.history.values())
         autoencoder.encoder.save("encoder")
@@ -232,6 +237,12 @@ for year in years:
     else:
         encoder = tf.keras.models.load_model("encoder")
         decoder = tf.keras.models.load_model("decoder")
+
+        import time
+
+        # Grab Currrent Time Before Running the Code
+        start = time.time()
+
         encoded = encoder(validation_data_resh).numpy()
         decoded = decoder(encoded).numpy()
 
@@ -301,6 +312,12 @@ for year in years:
     error_original_perc = np.sum(error_original / validation_data_resh * 100) / np.size(
         validation_data_resh
     )
+    # Grab Current Time After Running the Code
+    end = time.time()
+
+    # Subtract Start Time from The End Time
+    total_time = end - start
+    print("\n" + str(total_time))
 
     print("error_norm_nn:", error_norm_nn)
     print("error_original_nn:", error_original_nn)
